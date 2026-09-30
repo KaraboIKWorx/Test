@@ -1,0 +1,3291 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12" id="themeColorMeta">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SOS">
+<title>SOS</title>
+
+<!-- Theme applied before first paint to avoid flash -->
+<script>
+  (function () {
+    try {
+      var raw = localStorage.getItem('sos.theme');
+      var theme = raw ? JSON.parse(raw) : 'auto';
+      if (!['dark', 'light', 'auto'].includes(theme)) theme = 'auto';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {
+      document.documentElement.setAttribute('data-theme', 'auto');
+    }
+  })();
+</script>
+
+<style>
+  /* ============================================================
+     UNIVERSAL TOKENS (same in both themes)
+     ============================================================ */
+  :root {
+    --red:        #e11d48;
+    --red-bright: #ff3b5c;
+    --red-dark:   #a30f33;
+    --red-glow:   rgba(225, 29, 72, 0.45);
+    --green:      #22c55e;
+    --amber:      #f59e0b;
+    --blue:       #3b82f6;
+    --violet:     #8b5cf6;
+
+    --r-sm: 10px;
+    --r-md: 14px;
+    --r-lg: 20px;
+    --r-full: 999px;
+
+    --tab-h: 64px;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-t: env(safe-area-inset-top, 0px);
+  }
+
+  /* ============================================================
+     THEME: DARK
+     ============================================================ */
+  [data-theme="dark"] {
+    --bg:         #0b0d12;
+    --surface:    #141821;
+    --surface-2:  #1c2230;
+    --surface-3:  #232b3b;
+    --border:     #262d3d;
+    --text:       #eef1f7;
+    --muted:      #8b95a8;
+    --dim:        #5c6679;
+
+    --tabs-bg:    rgba(15, 18, 25, 0.92);
+    --overlay-bg: rgba(6, 8, 12, 0.92);
+    --topbar-bg:  #0b0d12;
+
+    --info-bg:     rgba(59, 130, 246, 0.08);
+    --info-border: rgba(59, 130, 246, 0.30);
+    --info-text:   #93c5fd;
+    --warn-bg:     rgba(245, 158, 11, 0.08);
+    --warn-border: rgba(245, 158, 11, 0.30);
+    --warn-text:   #fcd34d;
+    --danger-bg:   rgba(225, 29, 72, 0.08);
+    --danger-border: rgba(225, 29, 72, 0.30);
+    --danger-text: #fda4af;
+    --ok-bg:       rgba(34, 197, 94, 0.10);
+    --ok-border:   rgba(34, 197, 94, 0.30);
+    --ok-text:     #86efac;
+
+    --avatar-border: #0b0d12;
+    --hover-lift: #232b3b;
+  }
+
+  /* ============================================================
+     THEME: LIGHT
+     ============================================================ */
+  [data-theme="light"] {
+    --bg:         #f4f6fa;
+    --surface:    #ffffff;
+    --surface-2:  #eef1f6;
+    --surface-3:  #dfe5ee;
+    --border:     #d7dde8;
+    --text:       #0b0d12;
+    --muted:      #4a5568;
+    --dim:        #718096;
+
+    --tabs-bg:    rgba(255, 255, 255, 0.92);
+    --overlay-bg: rgba(240, 243, 249, 0.94);
+    --topbar-bg:  #ffffff;
+
+    --info-bg:     rgba(59, 130, 246, 0.10);
+    --info-border: rgba(59, 130, 246, 0.35);
+    --info-text:   #1d4ed8;
+    --warn-bg:     rgba(245, 158, 11, 0.12);
+    --warn-border: rgba(245, 158, 11, 0.40);
+    --warn-text:   #92400e;
+    --danger-bg:   rgba(225, 29, 72, 0.08);
+    --danger-border: rgba(225, 29, 72, 0.35);
+    --danger-text: #9f1239;
+    --ok-bg:       rgba(34, 197, 94, 0.12);
+    --ok-border:   rgba(34, 197, 94, 0.35);
+    --ok-text:     #166534;
+
+    --avatar-border: #ffffff;
+    --hover-lift: #dfe5ee;
+  }
+
+  /* Auto = follow system preference */
+  @media (prefers-color-scheme: light) {
+    [data-theme="auto"] {
+      --bg:         #f4f6fa;
+      --surface:    #ffffff;
+      --surface-2:  #eef1f6;
+      --surface-3:  #dfe5ee;
+      --border:     #d7dde8;
+      --text:       #0b0d12;
+      --muted:      #4a5568;
+      --dim:        #718096;
+      --tabs-bg:    rgba(255, 255, 255, 0.92);
+      --overlay-bg: rgba(240, 243, 249, 0.94);
+      --topbar-bg:  #ffffff;
+      --info-bg:     rgba(59, 130, 246, 0.10);
+      --info-border: rgba(59, 130, 246, 0.35);
+      --info-text:   #1d4ed8;
+      --warn-bg:     rgba(245, 158, 11, 0.12);
+      --warn-border: rgba(245, 158, 11, 0.40);
+      --warn-text:   #92400e;
+      --danger-bg:   rgba(225, 29, 72, 0.08);
+      --danger-border: rgba(225, 29, 72, 0.35);
+      --danger-text: #9f1239;
+      --ok-bg:       rgba(34, 197, 94, 0.12);
+      --ok-border:   rgba(34, 197, 94, 0.35);
+      --ok-text:     #166534;
+      --avatar-border: #ffffff;
+      --hover-lift: #dfe5ee;
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    [data-theme="auto"] {
+      --bg:         #0b0d12;
+      --surface:    #141821;
+      --surface-2:  #1c2230;
+      --surface-3:  #232b3b;
+      --border:     #262d3d;
+      --text:       #eef1f7;
+      --muted:      #8b95a8;
+      --dim:        #5c6679;
+      --tabs-bg:    rgba(15, 18, 25, 0.92);
+      --overlay-bg: rgba(6, 8, 12, 0.92);
+      --topbar-bg:  #0b0d12;
+      --info-bg:     rgba(59, 130, 246, 0.08);
+      --info-border: rgba(59, 130, 246, 0.30);
+      --info-text:   #93c5fd;
+      --warn-bg:     rgba(245, 158, 11, 0.08);
+      --warn-border: rgba(245, 158, 11, 0.30);
+      --warn-text:   #fcd34d;
+      --danger-bg:   rgba(225, 29, 72, 0.08);
+      --danger-border: rgba(225, 29, 72, 0.30);
+      --danger-text: #fda4af;
+      --ok-bg:       rgba(34, 197, 94, 0.10);
+      --ok-border:   rgba(34, 197, 94, 0.30);
+      --ok-text:     #86efac;
+      --avatar-border: #0b0d12;
+      --hover-lift: #232b3b;
+    }
+  }
+
+  /* ============================================================
+     BASE
+     ============================================================ */
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    overscroll-behavior: none;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+  body.strobe-on { background: #ffffff; }
+
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  ul { list-style: none; margin: 0; padding: 0; }
+
+  /* ============================================================
+     SHELL
+     ============================================================ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(var(--safe-t) + 12px) 16px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--topbar-bg);
+    position: sticky; top: 0; z-index: 20;
+  }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 800; letter-spacing: 2.5px; font-size: 0.95rem; }
+  .brand-mark {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: linear-gradient(145deg, var(--red-bright), var(--red));
+    display: grid; place-items: center; font-size: 0.8rem;
+    box-shadow: 0 0 16px var(--red-glow);
+  }
+  .status-strip { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  .mini-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 8px; border-radius: var(--r-full);
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.5px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    white-space: nowrap;
+  }
+  .mini-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .mini-pill--ok   { color: var(--green); }
+  .mini-pill--warn { color: var(--amber); }
+  .mini-pill--bad  { color: var(--red-bright); }
+
+  #view { flex: 1; overflow-y: auto; padding-bottom: calc(var(--tab-h) + var(--safe-b) + 24px); }
+  .screen { padding: 22px 18px 8px; max-width: 560px; margin: 0 auto; }
+  .screen--flush { padding-top: 14px; }
+
+  /* ============================================================
+     TABS
+     ============================================================ */
+  .tabs {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: calc(var(--tab-h) + var(--safe-b));
+    padding-bottom: var(--safe-b);
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    background: var(--tabs-bg);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border);
+    z-index: 30;
+  }
+  .tab {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.3px;
+    color: var(--dim); transition: color 0.15s;
+  }
+  .tab svg { width: 20px; height: 20px; stroke-width: 1.8; }
+  .tab.is-active { color: var(--text); }
+  .tab.is-active svg { stroke: var(--red-bright); }
+
+  /* ============================================================
+     ATOMS
+     ============================================================ */
+  .pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 12px; border-radius: var(--r-full);
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.8px;
+    text-transform: uppercase; border: 1px solid var(--border);
+    background: var(--surface); color: var(--muted);
+  }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .pill--ok   { color: var(--green); border-color: var(--ok-border); background: var(--ok-bg); }
+  .pill--live { color: var(--red-bright); border-color: var(--danger-border); background: var(--danger-bg); }
+  .pill--live .dot { animation: blink 1.1s ease-in-out infinite; }
+  .pill--warn { color: var(--warn-text); border-color: var(--warn-border); background: var(--warn-bg); }
+  .pill--info { color: var(--info-text); border-color: var(--info-border); background: var(--info-bg); }
+  @keyframes blink { 0%,100% { opacity: 1 } 50% { opacity: 0.25 } }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 14px 16px;
+  }
+
+  .muted { color: var(--muted); }
+  .dim   { color: var(--dim); }
+  .mono  { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+  .section-title {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 1.4px;
+    text-transform: uppercase; color: var(--dim);
+    margin: 26px 0 10px;
+  }
+  .section-title:first-child { margin-top: 4px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 16px; border-radius: var(--r-sm);
+    font-size: 0.88rem; font-weight: 650;
+    background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text); transition: background 0.15s, opacity 0.15s;
+    text-decoration: none;
+  }
+  .btn:active { background: var(--hover-lift); }
+  .btn--primary { background: var(--red); border-color: var(--red); color: #fff; }
+  .btn--primary:active { background: #c4163e; }
+  .btn--ghost { background: transparent; }
+  .btn--danger { background: transparent; border-color: var(--danger-border); color: var(--red-bright); }
+  .btn--safe { background: var(--green); border-color: var(--green); color: #fff; width: 100%; padding: 16px; font-size: 0.95rem; }
+  .btn--block { width: 100%; }
+  .btn--sm { padding: 8px 12px; font-size: 0.78rem; border-radius: 8px; }
+  .btn[disabled] { opacity: 0.4; pointer-events: none; }
+
+  .row { display: flex; align-items: center; gap: 10px; }
+  .row--between { justify-content: space-between; }
+  .stack { display: flex; flex-direction: column; gap: 10px; }
+
+  /* ============================================================
+     HOME
+     ============================================================ */
+  .home-status {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px; gap: 8px; flex-wrap: wrap;
+  }
+  .sos-wrap { display: grid; place-items: center; padding: 32px 0 20px; }
+  .sos {
+    position: relative; width: min(60vw, 236px); aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 34% 28%, #ff5470 0%, var(--red) 55%, var(--red-dark) 100%);
+    box-shadow:
+      0 0 0 10px rgba(225, 29, 72, 0.10),
+      0 0 0 22px rgba(225, 29, 72, 0.05),
+      0 18px 50px var(--red-glow);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    transition: transform 0.09s ease;
+    animation: sos-breathe 3.4s ease-in-out infinite;
+    color: #fff;
+  }
+  .sos:active { transform: scale(0.965); animation-play-state: paused; }
+  @keyframes sos-breathe {
+    0%, 100% { box-shadow: 0 0 0 10px rgba(225,29,72,0.10), 0 0 0 22px rgba(225,29,72,0.05), 0 18px 50px var(--red-glow); }
+    50%      { box-shadow: 0 0 0 14px rgba(225,29,72,0.13), 0 0 0 32px rgba(225,29,72,0.06), 0 18px 62px var(--red-glow); }
+  }
+  .sos__label { font-size: 3rem; font-weight: 900; letter-spacing: 6px; text-indent: 6px; }
+  .sos__sub   { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; opacity: 0.75; text-transform: uppercase; }
+
+  .home-hint { text-align: center; color: var(--muted); font-size: 0.85rem; margin: 0 0 26px; line-height: 1.5; }
+
+  .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .quick {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 14px 6px;
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    font-size: 0.68rem; font-weight: 600; color: var(--muted);
+    transition: background 0.15s; text-align: center; line-height: 1.2;
+  }
+  .quick:active { background: var(--surface-2); }
+  .quick svg { width: 20px; height: 20px; stroke: var(--red-bright); stroke-width: 1.8; }
+  .quick--active { background: var(--danger-bg); border-color: var(--danger-border); color: var(--red-bright); }
+
+  /* ============================================================
+     TIMER CARD
+     ============================================================ */
+  .timer-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 16px;
+    display: flex; align-items: center; gap: 14px; margin-top: 18px;
+  }
+  .timer-card__ring { width: 54px; height: 54px; position: relative; flex-shrink: 0; }
+  .timer-card__ring svg { transform: rotate(-90deg); }
+  .timer-card__ring circle { fill: none; stroke-width: 4; }
+  .timer-card__track { stroke: var(--surface-3); }
+  .timer-card__progress { stroke: var(--red-bright); stroke-linecap: round; transition: stroke-dashoffset 0.5s linear; }
+  .timer-card__body { flex: 1; min-width: 0; }
+  .timer-card__title { font-size: 0.88rem; font-weight: 650; }
+  .timer-card__desc { font-size: 0.74rem; color: var(--dim); margin-top: 3px; }
+  .timer-card__time { font-size: 1.05rem; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 0.5px; }
+  .timer-presets { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .preset {
+    font-size: 0.7rem; padding: 5px 10px; border-radius: var(--r-full);
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--muted); font-weight: 650;
+  }
+  .preset:active { background: var(--surface-3); }
+
+  /* ============================================================
+     LOG
+     ============================================================ */
+  .log-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .log-item:last-child { border-bottom: none; }
+  .log-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    display: grid; place-items: center; font-size: 0.85rem; flex-shrink: 0;
+    background: var(--surface-2);
+  }
+  .log-icon--alert { background: var(--danger-bg); }
+  .log-icon--ok    { background: var(--ok-bg); }
+  .log-icon--info  { background: var(--info-bg); }
+  .log-icon--warn  { background: var(--warn-bg); }
+  .log-body { flex: 1; min-width: 0; }
+  .log-title { font-size: 0.84rem; font-weight: 600; }
+  .log-time { font-size: 0.7rem; color: var(--dim); margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+  /* ============================================================
+     OVERLAYS
+     ============================================================ */
+  .overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: var(--overlay-bg);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    display: grid; place-items: center; padding: 24px;
+    animation: fade-in 0.18s ease;
+  }
+  @keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+
+  .countdown { display: grid; place-items: center; gap: 26px; text-align: center; }
+  .countdown__ring { position: relative; width: 190px; height: 190px; }
+  .countdown__ring svg { transform: rotate(-90deg); }
+  .countdown__track { fill: none; stroke: var(--surface-2); stroke-width: 7; }
+  .countdown__progress {
+    fill: none; stroke: var(--red-bright); stroke-width: 7;
+    stroke-linecap: round; stroke-dasharray: 339.29; stroke-dashoffset: 0;
+    animation: drain var(--dur, 5s) linear forwards;
+    filter: drop-shadow(0 0 8px var(--red-glow));
+  }
+  @keyframes drain { from { stroke-dashoffset: 0 } to { stroke-dashoffset: 339.29 } }
+  .countdown__num {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    font-size: 4.6rem; font-weight: 900; color: var(--red-bright);
+    font-variant-numeric: tabular-nums;
+  }
+  .countdown__label { font-size: 0.8rem; font-weight: 700; letter-spacing: 2.4px; text-transform: uppercase; color: var(--muted); }
+
+  /* ============================================================
+     FAKE CALL (always dark — mimics a call screen)
+     ============================================================ */
+  .fake-call {
+    position: fixed; inset: 0; z-index: 150;
+    background: linear-gradient(180deg, #0a0c10 0%, #171a22 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    padding: calc(var(--safe-t) + 40px) 24px calc(var(--safe-b) + 40px);
+    color: #fff; animation: fade-in 0.2s ease;
+  }
+  .fake-call__label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: #8b95a8; }
+  .fake-call__caller { text-align: center; margin-top: 24px; }
+  .fake-call__avatar {
+    width: 96px; height: 96px; border-radius: 50%;
+    background: #1c2230; display: grid; place-items: center;
+    font-size: 2rem; font-weight: 800; margin: 0 auto 18px;
+    border: 2px solid #262d3d;
+  }
+  .fake-call__name { font-size: 1.7rem; font-weight: 700; }
+  .fake-call__status { font-size: 0.9rem; color: #8b95a8; margin-top: 6px; }
+  .fake-call__actions { display: flex; justify-content: space-around; width: 100%; max-width: 340px; gap: 40px; }
+  .call-btn {
+    width: 72px; height: 72px; border-radius: 50%;
+    display: grid; place-items: center; color: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .call-btn svg { width: 30px; height: 30px; stroke-width: 2; }
+  .call-btn--decline { background: var(--red); }
+  .call-btn--accept  { background: var(--green); }
+  .call-btn__label { font-size: 0.7rem; text-align: center; margin-top: 8px; color: #8b95a8; letter-spacing: 0.5px; }
+
+  /* ============================================================
+     ACTIVE TOOL BAR
+     ============================================================ */
+  .active-tool-bar {
+    position: fixed; left: 12px; right: 12px;
+    bottom: calc(var(--tab-h) + var(--safe-b) + 12px); z-index: 40;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+    animation: slide-up 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+  }
+  @keyframes slide-up { from { transform: translateY(20px); opacity: 0 } to { transform: none; opacity: 1 } }
+  .active-tool-bar__body { flex: 1; }
+  .active-tool-bar__title { font-size: 0.85rem; font-weight: 650; }
+  .active-tool-bar__desc { font-size: 0.72rem; color: var(--dim); margin-top: 2px; }
+
+  /* ============================================================
+     ALERT SCREEN
+     ============================================================ */
+  .alert-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .elapsed { font-size: 1.6rem; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
+
+  .loc-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .loc-coords { font-size: 0.82rem; font-variant-numeric: tabular-nums; letter-spacing: 0.3px; }
+  .loc-meta { font-size: 0.72rem; color: var(--dim); }
+
+  .msg-preview {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--red); border-radius: var(--r-sm);
+    padding: 12px 14px; font-size: 0.83rem; line-height: 1.55;
+    color: var(--muted); word-break: break-word; white-space: pre-wrap;
+  }
+
+  .contact-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 12px 14px; margin-bottom: 8px;
+  }
+  .contact-row__main { display: flex; align-items: center; gap: 11px; min-width: 0; }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--surface-2); border: 1px solid var(--border);
+    display: grid; place-items: center;
+    font-size: 0.82rem; font-weight: 700; color: var(--muted);
+    flex-shrink: 0; position: relative;
+  }
+  .avatar--primary::after {
+    content: ''; position: absolute; top: -2px; right: -2px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--green); border: 2px solid var(--avatar-border);
+  }
+  .contact-row__name { font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .contact-row__phone { font-size: 0.72rem; color: var(--dim); }
+  .contact-row__actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+  .tag {
+    font-size: 0.6rem; font-weight: 800; letter-spacing: 0.6px;
+    padding: 2px 6px; border-radius: 4px;
+    background: var(--ok-bg); color: var(--ok-text); text-transform: uppercase;
+  }
+
+  /* ============================================================
+     TOOL CARDS
+     ============================================================ */
+  .tool-card {
+    display: flex; align-items: center; gap: 14px;
+    padding: 15px 14px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); margin-bottom: 9px;
+    text-align: left; width: 100%; transition: background 0.15s;
+  }
+  .tool-card:active { background: var(--surface-2); }
+  .tool-card__icon {
+    width: 42px; height: 42px; border-radius: 12px;
+    display: grid; place-items: center;
+    background: var(--surface-2); flex-shrink: 0;
+  }
+  .tool-card__icon svg { width: 22px; height: 22px; stroke-width: 1.8; }
+  .tool-card__body { flex: 1; min-width: 0; }
+  .tool-card__title { font-size: 0.92rem; font-weight: 650; }
+  .tool-card__desc { font-size: 0.75rem; color: var(--dim); margin-top: 3px; line-height: 1.4; }
+  .tool-card__arrow { color: var(--dim); font-size: 1.1rem; }
+
+  .tool-card--danger .tool-card__icon { background: var(--danger-bg); }
+  .tool-card--danger .tool-card__icon svg { stroke: var(--red-bright); }
+  .tool-card--blue   .tool-card__icon { background: var(--info-bg); }
+  .tool-card--blue   .tool-card__icon svg { stroke: var(--blue); }
+  .tool-card--amber  .tool-card__icon { background: var(--warn-bg); }
+  .tool-card--amber  .tool-card__icon svg { stroke: var(--amber); }
+  .tool-card--violet .tool-card__icon { background: rgba(139, 92, 246, 0.12); }
+  .tool-card--violet .tool-card__icon svg { stroke: var(--violet); }
+  .tool-card--green  .tool-card__icon { background: var(--ok-bg); }
+  .tool-card--green  .tool-card__icon svg { stroke: var(--green); }
+
+  /* ============================================================
+     ZONES
+     ============================================================ */
+  .zone-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 13px 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); margin-bottom: 8px;
+  }
+  .zone-row--inside { border-color: var(--danger-border); background: var(--danger-bg); }
+  .zone-row__main { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1; }
+  .zone-level {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .zone-level--high   { background: var(--red); box-shadow: 0 0 8px var(--red-glow); }
+  .zone-level--medium { background: var(--amber); }
+  .zone-level--low    { background: var(--blue); }
+  .zone-name { font-size: 0.9rem; font-weight: 650; }
+  .zone-meta { font-size: 0.72rem; color: var(--dim); margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .zone-badge {
+    font-size: 0.6rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.6px; padding: 3px 7px; border-radius: 4px;
+  }
+  .zone-badge--high   { background: var(--danger-bg); color: var(--red-bright); }
+  .zone-badge--medium { background: var(--warn-bg); color: var(--warn-text); }
+  .zone-badge--low    { background: var(--info-bg); color: var(--info-text); }
+
+  .zone-inside-bar {
+    background: var(--danger-bg); border: 1px solid var(--danger-border);
+    border-radius: var(--r-md); padding: 14px;
+    color: var(--danger-text); font-size: 0.85rem; line-height: 1.5;
+    margin-bottom: 14px; display: flex; gap: 12px; align-items: flex-start;
+    animation: pulse-border 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse-border {
+    0%, 100% { border-color: var(--danger-border); }
+    50%      { border-color: rgba(225, 29, 72, 0.6); }
+  }
+
+  /* ============================================================
+     INTEGRATIONS
+     ============================================================ */
+  .integration {
+    display: flex; align-items: center; gap: 13px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 14px; margin-bottom: 10px;
+  }
+  .integration__icon {
+    width: 40px; height: 40px; border-radius: var(--r-sm);
+    background: var(--surface-2); display: grid; place-items: center;
+    flex-shrink: 0; font-size: 1.1rem;
+  }
+  .integration__body { flex: 1; min-width: 0; }
+  .integration__name { font-size: 0.9rem; font-weight: 650; }
+  .integration__desc { font-size: 0.74rem; color: var(--dim); margin-top: 2px; line-height: 1.4; }
+  .status-chip {
+    font-size: 0.6rem; font-weight: 800; letter-spacing: 0.7px;
+    text-transform: uppercase; padding: 4px 8px;
+    border-radius: var(--r-full); white-space: nowrap;
+  }
+  .status-chip--on  { color: var(--ok-text); background: var(--ok-bg); }
+  .status-chip--off { color: var(--dim);   background: var(--surface-2); }
+
+  /* ============================================================
+     SETTINGS
+     ============================================================ */
+  .setting-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px; padding: 15px 0; border-bottom: 1px solid var(--border);
+  }
+  .setting-row:last-child { border-bottom: none; }
+  .setting-label { font-size: 0.9rem; font-weight: 600; }
+  .setting-desc { font-size: 0.74rem; color: var(--dim); margin-top: 3px; line-height: 1.4; }
+
+  .switch {
+    position: relative; width: 46px; height: 27px;
+    border-radius: var(--r-full); background: var(--surface-2);
+    border: 1px solid var(--border); flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .switch::after {
+    content: ''; position: absolute; top: 3px; left: 3px;
+    width: 19px; height: 19px; border-radius: 50%;
+    background: var(--muted);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
+  }
+  .switch.is-on { background: rgba(225, 29, 72, 0.18); border-color: var(--red); }
+  .switch.is-on::after { transform: translateX(19px); background: var(--red-bright); }
+
+  .input, select.input, textarea.input {
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-sm); padding: 13px 14px;
+    color: var(--text); font-size: 0.92rem; font-family: inherit;
+    outline: none; transition: border-color 0.15s;
+  }
+  .input:focus { border-color: var(--red); }
+  .input::placeholder { color: var(--dim); }
+  textarea.input { resize: vertical; min-height: 80px; line-height: 1.5; }
+  select.input {
+    -webkit-appearance: none; appearance: none;
+    background-repeat: no-repeat; background-position: right 14px center;
+    padding-right: 38px;
+  }
+  [data-theme="dark"] select.input {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b95a8' d='M6 8.5 1.5 4h9z'/%3E%3C/svg%3E");
+  }
+  [data-theme="light"] select.input {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a5568' d='M6 8.5 1.5 4h9z'/%3E%3C/svg%3E");
+  }
+  @media (prefers-color-scheme: light) {
+    [data-theme="auto"] select.input {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a5568' d='M6 8.5 1.5 4h9z'/%3E%3C/svg%3E");
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    [data-theme="auto"] select.input {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b95a8' d='M6 8.5 1.5 4h9z'/%3E%3C/svg%3E");
+    }
+  }
+
+  /* Theme segmented control */
+  .segmented {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--r-sm); padding: 3px; gap: 3px;
+  }
+  .segmented button {
+    padding: 9px 8px; border-radius: 7px;
+    font-size: 0.78rem; font-weight: 650; color: var(--muted);
+    transition: background 0.15s, color 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .segmented button.is-on { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+  .segmented svg { width: 14px; height: 14px; }
+
+  /* ============================================================
+     TOAST
+     ============================================================ */
+  .toast-host {
+    position: fixed; left: 50%;
+    bottom: calc(var(--tab-h) + var(--safe-b) + 18px);
+    transform: translateX(-50%); z-index: 200;
+    display: flex; flex-direction: column; gap: 8px; align-items: center;
+    pointer-events: none; width: max-content; max-width: 90vw;
+  }
+  .toast {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--r-full); padding: 10px 18px;
+    font-size: 0.82rem; font-weight: 600; color: var(--text);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+    animation: toast-in 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(10px) scale(0.94) } to { opacity: 1; transform: none } }
+
+  .empty { text-align: center; padding: 34px 20px; color: var(--dim); font-size: 0.85rem; line-height: 1.6; }
+
+  .banner { padding: 12px 14px; border-radius: var(--r-sm); font-size: 0.8rem; line-height: 1.5; margin-bottom: 14px; }
+  .banner--warn   { background: var(--warn-bg);   border: 1px solid var(--warn-border);   color: var(--warn-text); }
+  .banner--info   { background: var(--info-bg);   border: 1px solid var(--info-border);   color: var(--info-text); }
+  .banner--danger { background: var(--danger-bg); border: 1px solid var(--danger-border); color: var(--danger-text); }
+  .banner--ok     { background: var(--ok-bg);     border: 1px solid var(--ok-border);     color: var(--ok-text); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">◈</span>
+    <span>SOS</span>
+  </div>
+  <div class="status-strip" id="statusStrip"></div>
+</header>
+
+<main id="view"></main>
+<nav class="tabs" id="tabs"></nav>
+<div class="toast-host" id="toastHost"></div>
+<div id="portal"></div>
+
+<script>
+/* ================================================================
+   PART 1 — ADAPTER LAYER
+   ================================================================ */
+
+const Registry = (() => {
+  const slots = {};
+  return {
+    register(slot, adapter) { slots[slot] = adapter; return adapter; },
+    get(slot) {
+      if (!slots[slot]) throw new Error(`No adapter registered for slot: ${slot}`);
+      return slots[slot];
+    },
+    list() {
+      return Object.entries(slots).map(([slot, a]) => ({
+        slot,
+        id: a.id,
+        label: a.label,
+        description: a.description,
+        status: a.status,
+        icon: a.icon,
+      }));
+    },
+  };
+})();
+
+/* ---------- Storage ---------- */
+Registry.register('storage', {
+  id: 'local',
+  label: 'On-device storage',
+  description: 'Contacts, profile, zones, and log saved locally.',
+  status: 'connected',
+  icon: '💾',
+  async get(key, fallback = null) {
+    try {
+      const raw = localStorage.getItem(`sos.${key}`);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch { return fallback; }
+  },
+  async set(key, value) {
+    try { localStorage.setItem(`sos.${key}`, JSON.stringify(value)); } catch {}
+  },
+  async remove(key) {
+    try { localStorage.removeItem(`sos.${key}`); } catch {}
+  },
+});
+
+/* ---------- Location ---------- */
+Registry.register('location', {
+  id: 'browser-geolocation',
+  label: 'Browser Geolocation',
+  description: 'Live GPS. Upgrade to Google Maps Platform for geocoding and place names.',
+  status: 'connected',
+  icon: '📍',
+  isAvailable() { return 'geolocation' in navigator; },
+  getCurrent() {
+    return new Promise((resolve, reject) => {
+      if (!this.isAvailable()) return reject(new Error('Geolocation unsupported'));
+      navigator.geolocation.getCurrentPosition(
+        p => resolve({ lat: p.coords.latitude, lng: p.coords.longitude, accuracy: p.coords.accuracy, at: Date.now() }),
+        e => reject(e),
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+      );
+    });
+  },
+  watch(onUpdate, onError) {
+    if (!this.isAvailable()) { onError?.(new Error('unsupported')); return null; }
+    return navigator.geolocation.watchPosition(
+      p => onUpdate({ lat: p.coords.latitude, lng: p.coords.longitude, accuracy: p.coords.accuracy, at: Date.now() }),
+      e => onError?.(e),
+      { enableHighAccuracy: true, maximumAge: 8000, timeout: 15000 }
+    );
+  },
+  clearWatch(id) { if (id != null) navigator.geolocation.clearWatch(id); },
+
+  /** Haversine distance in metres. */
+  distance(a, b) {
+    const R = 6371000;
+    const toRad = d => (d * Math.PI) / 180;
+    const dLat = toRad(b.lat - a.lat);
+    const dLng = toRad(b.lng - a.lng);
+    const s = Math.sin(dLat / 2) ** 2 +
+              Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s));
+  },
+});
+
+/* ---------- Maps ---------- */
+Registry.register('maps', {
+  id: 'maps-link',
+  label: 'Google Maps (links)',
+  description: 'Static links. Replace with an embedded Maps or Mapbox view, plus Places search.',
+  status: 'connected',
+  icon: '🗺️',
+  linkFor(lat, lng) { return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`; },
+});
+
+/* ---------- Safety Zones (crime hotspots) ---------- */
+Registry.register('safetyZones', {
+  id: 'local-zones',
+  label: 'Safety Zones',
+  description: 'Crime hotspots and safe areas. Add your own or import from a data provider later.',
+  status: 'connected',
+  icon: '⚠️',
+  _cache: null,
+
+  async load() {
+    this._cache = (await Registry.get('storage').get('zones', [])) || [];
+    return this._cache;
+  },
+  async save() {
+    await Registry.get('storage').set('zones', this._cache || []);
+  },
+  all() { return this._cache || []; },
+
+  async add(zone) {
+    this._cache = this._cache || [];
+    this._cache.push(zone);
+    await this.save();
+  },
+  async remove(id) {
+    this._cache = (this._cache || []).filter(z => z.id !== id);
+    await this.save();
+  },
+  async replace(list) {
+    this._cache = list;
+    await this.save();
+  },
+
+  /** Returns the highest-severity zone containing the point, or null. */
+  zoneAt(lat, lng) {
+    const loc = Registry.get('location');
+    const inside = (this._cache || []).filter(z => {
+      const d = loc.distance({ lat, lng }, z);
+      return d <= z.radius;
+    });
+    if (inside.length === 0) return null;
+    const order = { high: 0, medium: 1, low: 2 };
+    inside.sort((a, b) => order[a.level] - order[b.level]);
+    return inside[0];
+  },
+
+  /** Seed zones for demo purposes. */
+  sampleZones() {
+    return [
+      { id: 'z_cbd',   name: 'City Centre — high crime',   level: 'high',   lat: -33.9249, lng: 18.4241, radius: 1200 },
+      { id: 'z_wdstk', name: 'Woodstock — watch area',     level: 'medium', lat: -33.9281, lng: 18.4400, radius: 900  },
+      { id: 'z_mitc',  name: 'Mitchells Plain — caution',  level: 'high',   lat: -34.0350, lng: 18.6200, radius: 1500 },
+    ];
+  },
+});
+
+/* ---------- Messaging ---------- */
+Registry.register('messaging', {
+  id: 'sms-deeplink',
+  label: 'SMS & Phone (device)',
+  description: 'Opens the native composer. Swap for Twilio or similar to send automatically.',
+  status: 'connected',
+  icon: '✉️',
+  isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  },
+  async send(to, body) {
+    const sep = this.isIOS() ? '&' : '?';
+    window.location.href = `sms:${to}${sep}body=${encodeURIComponent(body)}`;
+    return { status: 'handoff', provider: this.id };
+  },
+  async call(to) {
+    window.location.href = `tel:${to}`;
+    return { status: 'handoff', provider: this.id };
+  },
+});
+
+/* ---------- Share ---------- */
+Registry.register('share', {
+  id: 'web-share',
+  label: 'Web Share',
+  description: 'Native share sheet. Replace with FCM or APNs for server-pushed alerts.',
+  status: 'connected',
+  icon: '📤',
+  async send(payload) {
+    if (navigator.share) {
+      await navigator.share(payload);
+      return { status: 'handoff', provider: this.id };
+    }
+    await navigator.clipboard.writeText(payload.text);
+    return { status: 'copied', provider: 'clipboard' };
+  },
+});
+
+/* ---------- Audio ---------- */
+Registry.register('audio', {
+  id: 'web-audio',
+  label: 'Web Audio',
+  description: 'Siren and ringtone via Web Audio API. Swap for a native audio asset pack.',
+  status: 'connected',
+  icon: '🔊',
+  _ctx: null, _siren: null, _ringTimer: null,
+
+  ctx() {
+    if (!this._ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      this._ctx = new AC();
+    }
+    if (this._ctx.state === 'suspended') this._ctx.resume();
+    return this._ctx;
+  },
+
+  startSiren() {
+    const ctx = this.ctx();
+    if (!ctx || this._siren) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    osc.type = 'sawtooth'; osc.frequency.value = 700;
+    lfo.type = 'sine'; lfo.frequency.value = 1.4; lfoGain.gain.value = 350;
+    lfo.connect(lfoGain).connect(osc.frequency);
+    gain.gain.value = 0.0001;
+    osc.connect(gain).connect(ctx.destination);
+    const now = ctx.currentTime;
+    gain.gain.exponentialRampToValueAtTime(0.18, now + 0.15);
+    osc.start(now); lfo.start(now);
+    this._siren = { osc, gain, lfo };
+  },
+
+  stopSiren() {
+    if (!this._siren) return;
+    const { osc, gain, lfo } = this._siren;
+    try {
+      const now = this._ctx.currentTime;
+      gain.gain.cancelScheduledValues(now);
+      gain.gain.setValueAtTime(gain.gain.value, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+      osc.stop(now + 0.15); lfo.stop(now + 0.15);
+    } catch {}
+    this._siren = null;
+  },
+
+  chirp(freq = 880, dur = 0.22) {
+    const ctx = this.ctx();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(freq * 1.5, ctx.currentTime + 0.12);
+    gain.gain.value = 0.12;
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + dur + 0.05);
+  },
+
+  startRingtone() {
+    const ctx = this.ctx();
+    if (!ctx || this._ringTimer) return;
+    const playOnce = () => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine'; osc.frequency.value = 620;
+      gain.gain.value = 0.0001;
+      gain.gain.exponentialRampToValueAtTime(0.1, ctx.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.1, ctx.currentTime + 0.45);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.7);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.75);
+    };
+    playOnce();
+    this._ringTimer = setInterval(playOnce, 2200);
+  },
+
+  stopRingtone() {
+    if (this._ringTimer) { clearInterval(this._ringTimer); this._ringTimer = null; }
+  },
+
+  stopAll() { this.stopSiren(); this.stopRingtone(); },
+});
+
+/* ---------- Haptics ---------- */
+Registry.register('haptics', {
+  id: 'vibration-api',
+  label: 'Vibration',
+  description: 'Device vibration for alerts and confirmations. Android only.',
+  status: 'connected',
+  icon: '📳',
+  isAvailable() { return 'vibrate' in navigator; },
+  buzz(pattern = 40) { try { navigator.vibrate?.(pattern); } catch {} },
+  sosPattern() { this.buzz([300, 120, 300, 120, 300, 400, 300, 120, 300]); },
+  zoneEnterPattern() { this.buzz([120, 60, 120, 60, 400]); },
+});
+
+/* ---------- Battery ---------- */
+Registry.register('battery', {
+  id: 'battery-status',
+  label: 'Battery Status',
+  description: 'Level and charging state included in alert messages.',
+  status: 'connected',
+  icon: '🔋',
+  _manager: null,
+  isAvailable() { return 'getBattery' in navigator; },
+  watch(callback) {
+    if (!this.isAvailable()) return;
+    navigator.getBattery?.().then(b => {
+      this._manager = b;
+      const emit = () => callback({ level: Math.round(b.level * 100), charging: b.charging });
+      emit();
+      b.addEventListener('levelchange', emit);
+      b.addEventListener('chargingchange', emit);
+    }).catch(() => {});
+  },
+});
+
+/* ---------- Motion (shared accelerometer bus) ---------- */
+Registry.register('motion', {
+  id: 'device-motion',
+  label: 'Motion Sensors',
+  description: 'Shared accelerometer bus for shake and fall detection. iOS requires permission.',
+  status: 'connected',
+  icon: '📱',
+  _listener: null,
+  _subs: [],
+
+  isSupported() { return 'DeviceMotionEvent' in window; },
+
+  needsPermission() {
+    return typeof DeviceMotionEvent !== 'undefined' &&
+           typeof DeviceMotionEvent.requestPermission === 'function';
+  },
+
+  async requestPermission() {
+    if (!this.needsPermission()) return 'granted';
+    try { return await DeviceMotionEvent.requestPermission(); }
+    catch { return 'denied'; }
+  },
+
+  subscribe(fn) {
+    if (!this.isSupported()) return () => {};
+    if (!this._listener) {
+      this._listener = (e) => {
+        const acc = e.accelerationIncludingGravity || e.acceleration;
+        if (!acc) return;
+        const magnitude = Math.hypot(acc.x || 0, acc.y || 0, acc.z || 0);
+        this._subs.forEach(s => { try { s({ magnitude, raw: acc, event: e }); } catch {} });
+      };
+      window.addEventListener('devicemotion', this._listener, { passive: true });
+    }
+    this._subs.push(fn);
+    return () => { this._subs = this._subs.filter(s => s !== fn); };
+  },
+
+  unsubscribeAll() {
+    this._subs = [];
+    if (this._listener) {
+      window.removeEventListener('devicemotion', this._listener);
+      this._listener = null;
+    }
+  },
+});
+
+/* ---------- Fall Detection ---------- */
+Registry.register('fallDetection', {
+  id: 'motion-heuristic',
+  label: 'Fall Detection',
+  description: 'Sudden high-G impact followed by stillness. Heuristic; not medical-grade.',
+  status: 'connected',
+  icon: '🤕',
+
+  _unsub: null,
+  _impactAt: 0,
+  _stillSince: 0,
+
+  start(onFall, { impactThreshold = 28, stillThreshold = 2.2, confirmWindow = 2500 } = {}) {
+    const motion = Registry.get('motion');
+    if (!motion.isSupported()) return false;
+
+    this.stop();
+
+    const IMPACT = impactThreshold;
+    const STILL_DELTA = stillThreshold;
+    const WINDOW = confirmWindow;
+    const GRAVITY = 9.81;
+    const samples = [];
+
+    this._unsub = motion.subscribe(({ magnitude }) => {
+      samples.push(magnitude);
+      if (samples.length > 12) samples.shift();
+      const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
+      const variance = samples.reduce((a, b) => a + (b - avg) ** 2, 0) / samples.length;
+      const stddev = Math.sqrt(variance);
+
+      const now = Date.now();
+
+      // Impact: sudden peak well above gravity
+      if (magnitude > IMPACT && now - this._impactAt > 6000) {
+        this._impactAt = now;
+        this._stillSince = 0;
+        return;
+      }
+
+      // Stillness after impact: low variance, magnitude near gravity
+      if (this._impactAt && now - this._impactAt < WINDOW) {
+        const nearGravity = Math.abs(avg - GRAVITY) < 3.5;
+        const still = stddev < STILL_DELTA;
+        if (nearGravity && still) {
+          if (!this._stillSince) this._stillSince = now;
+          if (now - this._stillSince > 900) {
+            const impactAt = this._impactAt;
+            this._impactAt = 0;
+            this._stillSince = 0;
+            onFall({ impactAt, detectedAt: now });
+          }
+        } else {
+          this._stillSince = 0;
+        }
+      }
+    });
+
+    return true;
+  },
+
+  stop() {
+    if (this._unsub) { this._unsub(); this._unsub = null; }
+    this._impactAt = 0;
+    this._stillSince = 0;
+  },
+});
+
+/* ---------- Voice (placeholder) ---------- */
+Registry.register('voice', {
+  id: 'none',
+  label: 'Voice Trigger',
+  description: 'Keyword detection (e.g. "help me"). Needs SpeechRecognition + background audio.',
+  status: 'planned',
+  icon: '🎙️',
+  isAvailable() { return false; },
+  start() {}, stop() {},
+});
+
+/* ---------- Places (placeholder) ---------- */
+Registry.register('places', {
+  id: 'none',
+  label: 'Nearby Safe Places',
+  description: 'Nearest police, hospital, or pharmacy. Needs Google Places / Mapbox / Overpass.',
+  status: 'planned',
+  icon: '🏥',
+  async nearby() { return []; },
+});
+
+/* ---------- Auth (placeholder) ---------- */
+Registry.register('auth', {
+  id: 'none',
+  label: 'Sign-in',
+  description: 'Not wired up. Add Firebase Auth, Auth0, or Supabase when accounts are needed.',
+  status: 'planned',
+  icon: '🔐',
+  currentUser() { return null; },
+  isSignedIn() { return false; },
+});
+
+/* ---------- Backend / Sync (placeholder) ---------- */
+Registry.register('backend', {
+  id: 'none',
+  label: 'Cloud Sync',
+  description: 'No server yet. Needed for remote alerting and contact acknowledgement.',
+  status: 'planned',
+  icon: '☁️',
+  async pushAlert() { return { status: 'unavailable' }; },
+  async syncContacts() { return { status: 'unavailable' }; },
+  async syncLog() { return { status: 'unavailable' }; },
+});
+
+/* ---------- Emergency Directory ---------- */
+Registry.register('emergencyDirectory', {
+  id: 'static',
+  label: 'Emergency Numbers',
+  description: 'Static defaults. Swap for a region-aware directory (police, ambulance, fire).',
+  status: 'connected',
+  icon: '🚑',
+  byRegion: {
+    default: { general: '112' },
+    US: { general: '911' },
+    GB: { general: '999' },
+    ZA: { general: '112', police: '10111', ambulance: '10177' },
+  },
+  get(kind = 'general', region = 'default') {
+    const t = this.byRegion[region] || this.byRegion.default;
+    return t[kind] || t.general;
+  },
+});
+
+
+/* ================================================================
+   PART 2 — STATE
+   ================================================================ */
+
+const DEFAULT_SETTINGS = {
+  // Theme
+  theme: 'auto',
+
+  // Alert
+  countdownSeconds: 5,
+  shareLocation: true,
+  continuousTracking: true,
+  includeMapsLink: true,
+  includeBattery: true,
+  includeMedical: false,
+  silentSos: false,
+  autoSirenOnAlert: false,
+  confirmationChirp: true,
+  customMessageTemplate: '',
+  emergencyNumber: '112',
+
+  // Triggers
+  shakeToTrigger: false,
+  fallDetection: false,
+  hotspotMonitor: false,
+  hotspotMode: 'notify',     // 'notify' | 'arm'
+  hotspotCooldownMin: 30,
+  hotspotBeep: true,
+  hotspotVibrate: true,
+};
+
+const DEFAULT_PROFILE = {
+  fullName: '', bloodType: '', allergies: '', medications: '', conditions: '', notes: '',
+};
+
+const State = {
+  route: 'home',
+  theme: 'auto',
+  contacts: [],
+  settings: { ...DEFAULT_SETTINGS },
+  profile: { ...DEFAULT_PROFILE },
+  log: [],
+  alert: {
+    active: false, startedAt: null, location: null,
+    watchId: null, notified: [], sirenOn: false, reason: 'manual',
+  },
+  countdown: { running: false, timer: null },
+  safetyTimer: { active: false, endsAt: null, durationMs: 0, timer: null, ticker: null },
+  tools: { sirenOn: false, strobeOn: false, strobeTimer: null, fakeCallOpen: false },
+  zoneMonitor: {
+    watchId: null,
+    currentZoneId: null,
+    lastZoneId: null,
+    recentArmedAt: {},   // { zoneId: timestamp }
+    lastLocation: null,
+  },
+  fallMonitor: { lastTriggeredAt: 0 },
+  elapsedTimer: null,
+  battery: null,
+};
+
+let uid = 0;
+const nextId = (p = 'c') => `${p}_${Date.now()}_${uid++}`;
+
+
+/* ================================================================
+   PART 3 — UTILITIES
+   ================================================================ */
+
+const $  = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+const escapeHtml = (str = '') => String(str).replace(/[&<>"']/g, c => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+}[c]));
+
+const initials = (name = '') =>
+  name.trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?';
+
+const formatDuration = (ms) => {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const m = String(Math.floor(total / 60)).padStart(2, '0');
+  const s = String(total % 60).padStart(2, '0');
+  return `${m}:${s}`;
+};
+
+const formatRelative = (ts) => {
+  const diff = Date.now() - ts;
+  if (diff < 60_000) return 'just now';
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
+  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
+  return new Date(ts).toLocaleDateString();
+};
+
+function toast(message, ms = 2200) {
+  const host = $('#toastHost');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = message;
+  host.appendChild(el);
+  setTimeout(() => {
+    el.style.transition = 'opacity .25s, transform .25s';
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(8px)';
+    setTimeout(() => el.remove(), 260);
+  }, ms);
+}
+
+function buildAlertMessage() {
+  const parts = [];
+  const template = State.settings.customMessageTemplate.trim();
+  parts.push(template || '🚨 EMERGENCY — I need help.');
+
+  const loc = State.alert.location;
+  if (State.settings.shareLocation) {
+    if (loc) {
+      parts.push(`My location: ${Registry.get('maps').linkFor(loc.lat, loc.lng)}`);
+      parts.push(`(±${Math.round(loc.accuracy)}m accuracy)`);
+    } else {
+      parts.push('Location unavailable — please call me.');
+    }
+  }
+
+  if (State.settings.includeBattery && State.battery) {
+    parts.push(`Battery: ${State.battery.level}%${State.battery.charging ? ' (charging)' : ''}`);
+  }
+
+  if (State.settings.includeMedical) {
+    const p = State.profile;
+    const bits = [];
+    if (p.bloodType) bits.push(`Blood: ${p.bloodType}`);
+    if (p.allergies) bits.push(`Allergies: ${p.allergies}`);
+    if (p.medications) bits.push(`Meds: ${p.medications}`);
+    if (p.conditions) bits.push(`Conditions: ${p.conditions}`);
+    if (bits.length) parts.push(`Medical — ${bits.join(' · ')}`);
+  }
+
+  if (State.profile.fullName) parts.unshift(`From ${State.profile.fullName}.`);
+
+  return parts.join('\n');
+}
+
+
+/* ================================================================
+   PART 4 — ACTIVITY LOG
+   ================================================================ */
+
+async function logEvent(type, title, meta = {}) {
+  const entry = { id: `l_${Date.now()}_${uid++}`, type, title, meta, at: Date.now() };
+  State.log.unshift(entry);
+  if (State.log.length > 120) State.log.length = 120;
+  await Registry.get('storage').set('log', State.log);
+  if (State.route === 'home' || State.route === 'log') render();
+}
+
+const LOG_ICONS = {
+  alert:   { icon: '🚨', cls: 'alert' },
+  resolve: { icon: '✅', cls: 'ok'    },
+  share:   { icon: '📤', cls: 'info'  },
+  timer:   { icon: '⏱️', cls: 'info'  },
+  siren:   { icon: '📢', cls: 'warn'  },
+  call:    { icon: '📞', cls: 'info'  },
+  zone:    { icon: '⚠️', cls: 'warn'  },
+  fall:    { icon: '🤕', cls: 'alert' },
+  system:  { icon: '⚙️', cls: 'info'  },
+};
+
+
+/* ================================================================
+   PART 5 — ICONS
+   ================================================================ */
+
+const Icon = {
+  home:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></svg>`,
+  contacts: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>`,
+  tools:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0 5 5l-9.4 9.4a2.1 2.1 0 0 1-3-3z"/><path d="M14.7 6.3 18 3l3 3-3.3 3.3"/></svg>`,
+  grid:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/></svg>`,
+  settings: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10"/><path d="M18 7h2"/><path d="M4 17h4"/><path d="M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>`,
+  phone:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg>`,
+  phoneDown:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/><path d="m2 2 20 20"/></svg>`,
+  pin:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+  share:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/></svg>`,
+  siren:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18v-5a5 5 0 0 1 10 0v5"/><rect x="4" y="18" width="16" height="3" rx="1.5"/><path d="M12 4V2"/><path d="m4.5 6.5-1.5-1.5"/><path d="m19.5 6.5 1.5-1.5"/></svg>`,
+  strobe:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>`,
+  timer:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg>`,
+  call:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg>`,
+  hospital: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"/><path d="M12 9v6"/><path d="M9 12h6"/></svg>`,
+  user:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>`,
+  history:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/></svg>`,
+  edit:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>`,
+  shield:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5z"/></svg>`,
+  zone:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/></svg>`,
+  moon:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>`,
+  sun:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.9 4.9 1.4 1.4"/><path d="m17.7 17.7 1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m4.9 19.1 1.4-1.4"/><path d="m17.7 6.3 1.4-1.4"/></svg>`,
+  auto:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18" fill="currentColor" fill-opacity="0.2"/></svg>`,
+  bell:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>`,
+  fall:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="m6 22 3-8 3 2 4-4"/><path d="M9 14 5 16"/><path d="m15 12 4 2"/></svg>`,
+  silent:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/></svg>`,
+};
+
+
+/* ================================================================
+   PART 6 — THEME
+   ================================================================ */
+
+async function applyTheme(theme) {
+  if (!['dark', 'light', 'auto'].includes(theme)) theme = 'auto';
+  State.theme = theme;
+  State.settings.theme = theme;
+
+  document.documentElement.setAttribute('data-theme', theme);
+  await Registry.get('storage').set('theme', theme);
+
+  // Update mobile browser chrome colour
+  const isLight = theme === 'light' ||
+    (theme === 'auto' && window.matchMedia('(prefers-color-scheme: light)').matches);
+  $('#themeColorMeta')?.setAttribute('content', isLight ? '#f4f6fa' : '#0b0d12');
+
+  render();
+}
+
+// React to system theme change while in auto mode
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  if (State.theme === 'auto') {
+    const isLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    $('#themeColorMeta')?.setAttribute('content', isLight ? '#f4f6fa' : '#0b0d12');
+  }
+});
+
+
+/* ================================================================
+   PART 7 — VIEWS
+   ================================================================ */
+
+const Views = {};
+
+/* ---------------- HOME ---------------- */
+Views.home = () => {
+  const timer = State.safetyTimer;
+  const recent = State.log.slice(0, 3);
+  const loc = Registry.get('location');
+  const currentZone = State.zoneMonitor.currentZoneId
+    ? Registry.get('safetyZones').all().find(z => z.id === State.zoneMonitor.currentZoneId)
+    : null;
+
+  return `
+    <section class="screen">
+      ${currentZone ? `
+        <div class="zone-inside-bar">
+          <span style="font-size:1.2rem;">⚠️</span>
+          <div>
+            <strong>You're inside ${escapeHtml(currentZone.name)}</strong><br>
+            <span style="opacity:.85;">Stay alert. Tap SOS if you feel unsafe.</span>
+          </div>
+        </div>
+      ` : ''}
+
+      <div class="home-status">
+        <span class="pill ${loc.isAvailable() ? 'pill--ok' : 'pill--warn'}">
+          <span class="dot"></span> ${loc.isAvailable() ? 'GPS ready' : 'GPS off'}
+        </span>
+        <span class="gps-readout dim mono" style="font-size:.72rem;" id="gpsReadout">
+          ${State.alert.location ? `${State.alert.location.lat.toFixed(4)}, ${State.alert.location.lng.toFixed(4)}` : '—'}
+        </span>
+      </div>
+
+      <div class="sos-wrap">
+        <button class="sos" id="sosBtn" aria-label="Trigger emergency SOS">
+          <span class="sos__label">SOS</span>
+          <span class="sos__sub">${State.settings.silentSos ? 'Silent · tap to arm' : 'Tap to arm'}</span>
+        </button>
+      </div>
+
+      <p class="home-hint">
+        ${State.settings.silentSos
+          ? `Silent mode — an alert will fire after ${State.settings.countdownSeconds}s with no visible countdown.`
+          : `Tap, then confirm within <strong>${State.settings.countdownSeconds}s</strong> to alert your contacts.`
+        }
+      </p>
+
+      <div class="timer-card" id="timerCard">
+        ${timer.active ? Views._timerActive() : Views._timerIdle()}
+      </div>
+
+      <div class="section-title">Quick actions</div>
+      <div class="quick-grid">
+        <button class="quick" data-action="emergency-call">${Icon.phone}<span>Emergency</span></button>
+        <button class="quick" data-action="share-location">${Icon.pin}<span>Share<br>location</span></button>
+        <button class="quick ${State.tools.sirenOn ? 'quick--active' : ''}" data-action="toggle-siren">
+          ${Icon.siren}<span>${State.tools.sirenOn ? 'Siren on' : 'Siren'}</span>
+        </button>
+        <button class="quick" data-action="open-fake-call">${Icon.call}<span>Fake<br>call</span></button>
+      </div>
+
+      ${State.contacts.length === 0 ? `
+        <div class="card" style="margin-top:22px; border-color: var(--warn-border);">
+          <div style="font-size:.88rem; font-weight:650;">No emergency contacts</div>
+          <div class="setting-desc">Add at least one person who should be alerted.</div>
+          <button class="btn btn--primary btn--block" style="margin-top:12px;" data-nav="contacts">
+            Add a contact
+          </button>
+        </div>
+      ` : ''}
+
+      ${recent.length > 0 ? `
+        <div class="section-title">Recent activity</div>
+        <div class="card" style="padding: 4px 14px;">${recent.map(Views._logItem).join('')}</div>
+        <button class="btn btn--ghost btn--block" style="margin-top:10px;" data-nav="log">
+          View all activity
+        </button>
+      ` : ''}
+    </section>
+  `;
+};
+
+Views._timerIdle = () => `
+  <div class="timer-card__ring">
+    <svg width="54" height="54" viewBox="0 0 54 54">
+      <circle class="timer-card__track" cx="27" cy="27" r="23"></circle>
+    </svg>
+    <div style="position:absolute; inset:0; display:grid; place-items:center; font-size:.85rem;">⏱️</div>
+  </div>
+  <div class="timer-card__body">
+    <div class="timer-card__title">Safety timer</div>
+    <div class="timer-card__desc">Auto-alerts if you don't check in.</div>
+    <div class="timer-presets">
+      <button class="preset" data-timer-start="5">5 min</button>
+      <button class="preset" data-timer-start="15">15 min</button>
+      <button class="preset" data-timer-start="30">30 min</button>
+      <button class="preset" data-timer-start="60">1 hr</button>
+    </div>
+  </div>
+`;
+
+Views._timerActive = () => {
+  const t = State.safetyTimer;
+  const total = t.durationMs || 1;
+  const remaining = Math.max(0, t.endsAt - Date.now());
+  const progress = 1 - remaining / total;
+  const circ = 2 * Math.PI * 23;
+  const offset = circ * (1 - progress);
+
+  return `
+    <div class="timer-card__ring">
+      <svg width="54" height="54" viewBox="0 0 54 54">
+        <circle class="timer-card__track" cx="27" cy="27" r="23"></circle>
+        <circle class="timer-card__progress" cx="27" cy="27" r="23"
+                stroke-dasharray="${circ.toFixed(2)}"
+                stroke-dashoffset="${offset.toFixed(2)}"></circle>
+      </svg>
+    </div>
+    <div class="timer-card__body">
+      <div class="timer-card__title">Check-in timer running</div>
+      <div class="timer-card__time mono" id="safetyTimerDisplay">${formatDuration(remaining)}</div>
+      <div class="timer-card__desc">Tap below if you're safe.</div>
+      <div class="timer-presets" style="margin-top:10px;">
+        <button class="preset" data-timer-extend="5" style="background:var(--ok-bg); border-color:var(--ok-border); color:var(--ok-text);">+5 min</button>
+        <button class="preset" data-timer-cancel style="background:var(--danger-bg); border-color:var(--danger-border); color:var(--danger-text);">I'm safe</button>
+      </div>
+    </div>
+  `;
+};
+
+/* ---------------- ALERT ---------------- */
+Views.alert = () => {
+  const loc = State.alert.location;
+  return `
+    <section class="screen screen--flush">
+      <div class="alert-header">
+        <span class="pill pill--live"><span class="dot"></span> Alert active</span>
+        <span class="elapsed mono" id="elapsedDisplay">00:00</span>
+      </div>
+
+      ${State.alert.reason === 'hotspot' ? `
+        <div class="banner banner--danger">
+          Triggered by entering a <strong>crime hotspot</strong>.
+        </div>
+      ` : ''}
+      ${State.alert.reason === 'fall' ? `
+        <div class="banner banner--danger">
+          Triggered by <strong>fall detection</strong>.
+        </div>
+      ` : ''}
+      ${State.alert.reason === 'safety-timer' ? `
+        <div class="banner banner--warn">
+          Triggered by an <strong>expired safety timer</strong>.
+        </div>
+      ` : ''}
+
+      <div class="loc-card">
+        <div class="row row--between">
+          <span style="font-size:.7rem; font-weight:700; letter-spacing:1px; color:var(--dim); text-transform:uppercase;">
+            Live location
+          </span>
+          <span class="status-chip ${loc ? 'status-chip--on' : 'status-chip--off'}" id="locChip">
+            ${loc ? 'Locked' : 'Acquiring…'}
+          </span>
+        </div>
+        <div class="loc-coords mono" id="locCoords">
+          ${loc ? `${loc.lat.toFixed(6)}, ${loc.lng.toFixed(6)}` : 'Waiting for GPS…'}
+        </div>
+        <div class="loc-meta" id="locMeta">
+          ${loc ? `±${Math.round(loc.accuracy)}m accuracy · ${new Date(loc.at).toLocaleTimeString()}` : 'Enable location for faster response'}
+        </div>
+        <div class="row" style="margin-top:10px; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn--sm" data-action="refresh-location">Refresh</button>
+          <a class="btn btn--sm" id="mapLink" ${loc ? `href="${Registry.get('maps').linkFor(loc.lat, loc.lng)}" target="_blank" rel="noopener"` : 'disabled'}>Open map</a>
+          <button class="btn btn--sm ${State.alert.sirenOn ? 'btn--primary' : ''}" data-action="toggle-alert-siren">
+            ${State.alert.sirenOn ? 'Siren on' : 'Siren'}
+          </button>
+        </div>
+      </div>
+
+      <div class="section-title">Outgoing message</div>
+      <div class="msg-preview" id="msgPreview">${escapeHtml(buildAlertMessage())}</div>
+      <button class="btn btn--ghost btn--block btn--sm" style="margin-top:8px;" data-action="copy-message">
+        Copy message
+      </button>
+
+      <div class="section-title">Emergency contacts</div>
+      ${State.contacts.length === 0
+        ? `<div class="empty">No contacts yet.<br>Add someone in the Contacts tab.</div>`
+        : State.contacts.map(c => `
+            <div class="contact-row" data-contact="${c.id}">
+              <div class="contact-row__main">
+                <div class="avatar ${c.primary ? 'avatar--primary' : ''}">${escapeHtml(initials(c.name))}</div>
+                <div style="min-width:0;">
+                  <div class="contact-row__name">
+                    ${escapeHtml(c.name)}
+                    ${c.primary ? '<span class="tag">Primary</span>' : ''}
+                  </div>
+                  <div class="contact-row__phone mono">${escapeHtml(c.phone)}</div>
+                </div>
+              </div>
+              <div class="contact-row__actions">
+                <button class="btn btn--sm btn--primary" data-action="text-contact" data-id="${c.id}">Text</button>
+                <button class="btn btn--sm" data-action="call-contact" data-id="${c.id}">Call</button>
+              </div>
+            </div>
+          `).join('')
+      }
+
+      <div class="stack" style="margin-top:16px;">
+        <button class="btn btn--block" data-action="share-alert">${Icon.share} Share alert</button>
+        <button class="btn btn--block" data-action="text-all">Text all contacts</button>
+      </div>
+
+      <button class="btn btn--safe" style="margin-top:20px;" data-action="resolve-alert">
+        I'm safe — cancel alert
+      </button>
+    </section>
+  `;
+};
+
+/* ---------------- CONTACTS ---------------- */
+Views.contacts = () => `
+  <section class="screen screen--flush">
+    <div class="section-title">Emergency contacts</div>
+    <p class="dim" style="font-size:.78rem; margin:0 0 16px; line-height:1.55;">
+      These people receive your alert. Mark one as <strong>primary</strong> for first contact.
+    </p>
+
+    ${State.contacts.length === 0
+      ? `<div class="empty">No contacts yet.<br>Add the first one below.</div>`
+      : State.contacts.map(c => `
+          <div class="contact-row">
+            <div class="contact-row__main">
+              <div class="avatar ${c.primary ? 'avatar--primary' : ''}">${escapeHtml(initials(c.name))}</div>
+              <div style="min-width:0;">
+                <div class="contact-row__name">
+                  ${escapeHtml(c.name)}
+                  ${c.primary ? '<span class="tag">Primary</span>' : ''}
+                </div>
+                <div class="contact-row__phone mono">${escapeHtml(c.phone)}</div>
+              </div>
+            </div>
+            <div class="contact-row__actions">
+              <button class="btn btn--sm" data-action="make-primary" data-id="${c.id}">${c.primary ? '★' : '☆'}</button>
+              <button class="btn btn--sm btn--danger" data-action="delete-contact" data-id="${c.id}">✕</button>
+            </div>
+          </div>
+        `).join('')
+    }
+
+    <form id="addContactForm" style="margin-top:20px; display:flex; flex-direction:column; gap:9px;">
+      <input class="input" type="text" name="name" placeholder="Full name" autocomplete="name" required>
+      <input class="input" type="tel" name="phone" placeholder="Phone number, e.g. +27821234567" autocomplete="tel" required>
+      <label style="display:flex; align-items:center; gap:8px; font-size:.82rem; color:var(--muted); padding:2px 4px;">
+        <input type="checkbox" name="primary"> Mark as primary contact
+      </label>
+      <button class="btn btn--primary btn--block" type="submit">Add contact</button>
+    </form>
+  </section>
+`;
+
+/* ---------------- ZONES ---------------- */
+Views.zones = () => {
+  const zones = Registry.get('safetyZones').all();
+  const monitor = State.zoneMonitor;
+  const insideId = monitor.currentZoneId;
+  const s = State.settings;
+
+  return `
+    <section class="screen screen--flush">
+      <div class="section-title">Safety zones</div>
+      <p class="dim" style="font-size:.78rem; margin:0 0 14px; line-height:1.55;">
+        Crime hotspots and watch areas. When monitoring is on, entering a zone
+        can notify or arm an alert depending on your choice.
+      </p>
+
+      <div class="setting-row" style="padding:12px 14px; border:1px solid var(--border); border-radius:var(--r-md); background:var(--surface);">
+        <div>
+          <div class="setting-label">Zone monitoring</div>
+          <div class="setting-desc">${s.hotspotMonitor ? 'Active — scanning your location' : 'Off — no zone alerts'}</div>
+        </div>
+        <button class="switch ${s.hotspotMonitor ? 'is-on' : ''}" data-toggle="hotspotMonitor" aria-label="Zone monitoring"></button>
+      </div>
+
+      ${s.hotspotMonitor ? `
+        <div class="section-title">On zone entry</div>
+        <div class="segmented" id="hotspotModeSegment">
+          <button data-set="hotspotMode" data-value="notify" class="${s.hotspotMode === 'notify' ? 'is-on' : ''}">
+            ${Icon.bell} Notify
+          </button>
+          <button data-set="hotspotMode" data-value="arm" class="${s.hotspotMode === 'arm' ? 'is-on' : ''}">
+            ${Icon.shield} Auto-arm
+          </button>
+        </div>
+        <p class="dim" style="font-size:.72rem; margin:8px 4px 0; line-height:1.5;">
+          ${s.hotspotMode === 'arm'
+            ? 'Entering a zone starts the SOS countdown automatically. Cancel if it\'s a false alarm.'
+            : 'Entering a zone buzzes and notifies you. You decide whether to trigger SOS.'}
+        </p>
+
+        <div class="setting-row" style="margin-top:8px;">
+          <div>
+            <div class="setting-label">Cooldown</div>
+            <div class="setting-desc">Wait before re-arming the same zone.</div>
+          </div>
+          <select class="input" id="hotspotCooldown" style="width:auto; padding:9px 34px 9px 12px;">
+            ${[5, 15, 30, 60, 120].map(n =>
+              `<option value="${n}" ${s.hotspotCooldownMin === n ? 'selected' : ''}>${n} min</option>`
+            ).join('')}
+          </select>
+        </div>
+      ` : ''}
+
+      <div class="section-title">${zones.length} zones</div>
+
+      ${insideId ? `
+        <div class="zone-inside-bar" style="margin-bottom:12px;">
+          <span style="font-size:1.2rem;">📍</span>
+          <div>
+            <strong>Currently inside a zone</strong><br>
+            <span style="opacity:.85;">${escapeHtml(zones.find(z => z.id === insideId)?.name || '')}</span>
+          </div>
+        </div>
+      ` : ''}
+
+      ${zones.length === 0
+        ? `<div class="empty">No zones yet.<br>Add one below or load sample hotspots.</div>`
+        : zones.map(z => `
+            <div class="zone-row ${insideId === z.id ? 'zone-row--inside' : ''}">
+              <div class="zone-row__main">
+                <div class="zone-level zone-level--${z.level}"></div>
+                <div style="min-width:0;">
+                  <div class="zone-name">${escapeHtml(z.name)}</div>
+                  <div class="zone-meta mono">${z.lat.toFixed(4)}, ${z.lng.toFixed(4)} · ${z.radius}m radius</div>
+                </div>
+              </div>
+              <span class="zone-badge zone-badge--${z.level}">${z.level}</span>
+              <button class="btn btn--sm btn--danger" data-action="delete-zone" data-id="${z.id}">✕</button>
+            </div>
+          `).join('')
+      }
+
+      <div class="stack" style="margin-top:16px;">
+        <button class="btn btn--primary btn--block" data-action="add-zone-at-current">
+          Add current location as zone
+        </button>
+        <button class="btn btn--block" data-action="simulate-zone-entry">
+          Simulate entering nearest zone
+        </button>
+        ${zones.length === 0 ? `
+          <button class="btn btn--ghost btn--block" data-action="load-sample-zones">
+            Load sample hotspots (demo)
+          </button>
+        ` : ''}
+        <button class="btn btn--ghost btn--block" data-nav="tools">Back to tools</button>
+      </div>
+    </section>
+  `;
+};
+
+/* ---------------- TOOLS ---------------- */
+Views.tools = () => `
+  <section class="screen screen--flush">
+    <div class="section-title">Deterrents</div>
+
+    <button class="tool-card tool-card--danger" data-action="toggle-siren">
+      <div class="tool-card__icon">${Icon.siren}</div>
+      <div class="tool-card__body">
+        <div class="tool-card__title">${State.tools.sirenOn ? 'Stop siren' : 'Loud siren'}</div>
+        <div class="tool-card__desc">${State.tools.sirenOn ? 'Siren is currently sounding.' : 'Loud alternating alarm to draw attention.'}</div>
+      </div>
+      <div class="tool-card__arrow">${State.tools.sirenOn ? '■' : '▶'}</div>
+    </button>
+
+    <button class="tool-card tool-card--amber" data-action="toggle-strobe">
+      <div class="tool-card__icon">${Icon.strobe}</div>
+      <div class="tool-card__body">
+        <div class="tool-card__title">${State.tools.strobeOn ? 'Stop strobe' : 'Strobe light'}</div>
+        <div class="tool-card__desc">${State.tools.strobeOn ? 'Screen is flashing.' : 'Flashes the screen to signal distress.'}</div>
+      </div>
+      <div class="tool-card__arrow">${State.tools.strobeOn ? '■' : '▶'}</div>
+    </button>
+
+    <div class="section-title">Situational</div>
+
+    <button class="tool-card tool-card--violet" data-action="open-fake-call">
+      <div class="tool-card__icon">${Icon.call}</div>
+      <div class="tool-card__body">
+        <div class="tool-card__title">Fake incoming call</div>
+        <div class="tool-card__desc">Simulates a call so you can excuse yourself.</div>
+      </div>
+      <div class="tool-card__arrow">›</div>
+    </button>
+
+    <button class="tool-card tool-card--amber" data-nav="zones">
+      <div class="tool-card__icon">${Icon.zone}</div>
+      <div class="tool-card__body">
+        <div class="tool-card__title">Safety zones</div>
+        <div class="tool-card__desc">
+          ${State.settings.hotspotMonitor
+            ? `${Registry.get('safetyZones').all().length} zones · monitoring on`
+            : 'Crime hotspots and watch areas.'}
+        </div>
+      </div>
+      <div class="tool-card__arrow">›</div>
+    </button>
+
+    <button class="tool-card tool-card--blue" data-nav="nearby">
+      <div class="tool-card__icon">${Icon.hospital}</div>
+      <div class="tool-card__body">
+        <div class="tool-card__title">Nearby safe places</div>
+        <div class="tool-card__desc">Police, hospitals, and open businesses — needs a places adapter.</div>
+      </div>
+      <div class="tool-card__arrow">›</div>
+    </button>
+
+    <div class="section-title">Automatic protection</div>
+
+    <div class="tool-card" style="cursor:default;">
+      <div class="tool-card__icon" style="background:var(--ok-bg);">${Icon.shield}</div>
+      <div class="tool-card__body">
+        <div class="tool-card__title">Shake to trigger</div>
+        <div class="tool-card__desc">${State.settings.shakeToTrigger ? 'Armed — shake your phone to start SOS.' : 'Off.'}</div>
+      </div>
+      <button class="switch ${State.settings.shakeToTrigger ? 'is-on' : ''}" data-toggle="shakeToTrigger"></button>
+    </div>
+
+    <div class="tool-card" style="cursor:default;">
+      <div class="tool-card__icon" style="background:var(--danger-bg);">${Icon.fall}</div>
+      <div class="tool-card__body">
+        <div class="tool-card__title">Fall detection</div>
+        <div class="tool-card__desc">${State.settings.fallDetection ? 'Armed — detects sudden falls.' : 'Off.'}</div>
+      </div>
+      <button class="switch ${State.settings.fallDetection ? 'is-on' : ''}" data-toggle="fallDetection"></button>
+    </div>
+
+    <div class="tool-card" style="cursor:default;">
+      <div class="tool-card__icon" style="background:var(--info-bg);">${Icon.silent}</div>
+      <div class="tool-card__body">
+        <div class="tool-card__title">Silent SOS</div>
+        <div class="tool-card__desc">${State.settings.silentSos ? 'On — no visible countdown.' : 'Off — countdown is visible.'}</div>
+      </div>
+      <button class="switch ${State.settings.silentSos ? 'is-on' : ''}" data-toggle="silentSos"></button>
+    </div>
+  </section>
+`;
+
+/* ---------------- NEARBY ---------------- */
+Views.nearby = () => `
+  <section class="screen screen--flush">
+    <div class="section-title">Nearby safe places</div>
+    <div class="banner banner--info">
+      This feature needs a places adapter — Google Places, Mapbox, or the free Overpass API.
+    </div>
+    <div class="stack">
+      <button class="tool-card tool-card--blue" data-action="search-nearby" data-type="police">
+        <div class="tool-card__icon">${Icon.shield}</div>
+        <div class="tool-card__body">
+          <div class="tool-card__title">Police stations</div>
+          <div class="tool-card__desc">Nearest law enforcement.</div>
+        </div>
+      </button>
+      <button class="tool-card tool-card--danger" data-action="search-nearby" data-type="hospital">
+        <div class="tool-card__icon">${Icon.hospital}</div>
+        <div class="tool-card__body">
+          <div class="tool-card__title">Hospitals & clinics</div>
+          <div class="tool-card__desc">Nearest emergency medical care.</div>
+        </div>
+      </button>
+      <button class="tool-card tool-card--amber" data-action="search-nearby" data-type="pharmacy">
+        <div class="tool-card__icon">💊</div>
+        <div class="tool-card__body">
+          <div class="tool-card__title">Open pharmacies</div>
+          <div class="tool-card__desc">Nearest open pharmacy or clinic.</div>
+        </div>
+      </button>
+    </div>
+    <button class="btn btn--ghost btn--block" style="margin-top:20px;" data-nav="tools">Back to tools</button>
+  </section>
+`;
+
+/* ---------------- SERVICES ---------------- */
+Views.integrations = () => {
+  const items = Registry.list();
+  const chipFor = (s) => {
+    if (s === 'connected') return `<span class="status-chip status-chip--on">Active</span>`;
+    if (s === 'available') return `<span class="status-chip status-chip--off">Available</span>`;
+    return `<span class="status-chip status-chip--off">Planned</span>`;
+  };
+  return `
+    <section class="screen screen--flush">
+      <div class="section-title">Service slots</div>
+      <p class="dim" style="font-size:.78rem; margin:0 0 18px; line-height:1.55;">
+        Every external capability is an adapter slot. Drop in a provider and the UI updates automatically.
+      </p>
+      ${items.map(it => `
+        <div class="integration">
+          <div class="integration__icon">${it.icon || '🔌'}</div>
+          <div class="integration__body">
+            <div class="integration__name">${escapeHtml(it.label)}</div>
+            <div class="integration__desc">${escapeHtml(it.description)}</div>
+            <div class="dim" style="font-size:.66rem; margin-top:5px;">
+              slot: <code style="color:var(--muted);">${it.slot}</code>
+            </div>
+          </div>
+          ${chipFor(it.status)}
+        </div>
+      `).join('')}
+      <div class="card" style="margin-top:22px; border-style:dashed;">
+        <div style="font-size:.85rem; font-weight:650; margin-bottom:6px;">Registering a provider</div>
+        <div class="dim" style="font-size:.74rem; line-height:1.6;">
+          <code style="color:var(--muted);">Registry.register('messaging', twilioAdapter)</code>
+        </div>
+      </div>
+    </section>
+  `;
+};
+
+/* ---------------- SETTINGS ---------------- */
+Views.settings = () => {
+  const s = State.settings;
+  const toggle = (key, label, desc) => `
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">${label}</div>
+        <div class="setting-desc">${desc}</div>
+      </div>
+      <button class="switch ${s[key] ? 'is-on' : ''}" data-toggle="${key}"></button>
+    </div>
+  `;
+
+  return `
+    <section class="screen screen--flush">
+      <div class="section-title">Appearance</div>
+      <div class="card" style="padding:14px;">
+        <div class="segmented" id="themeSegment">
+          <button data-set-theme="light" class="${State.theme === 'light' ? 'is-on' : ''}">${Icon.sun} Light</button>
+          <button data-set-theme="dark"  class="${State.theme === 'dark'  ? 'is-on' : ''}">${Icon.moon} Dark</button>
+          <button data-set-theme="auto"  class="${State.theme === 'auto'  ? 'is-on' : ''}">${Icon.auto} Auto</button>
+        </div>
+        <div class="setting-desc" style="margin-top:10px;">
+          ${State.theme === 'auto'
+            ? `Following system theme · currently ${window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'}`
+            : `Using ${State.theme} mode`
+          }
+        </div>
+      </div>
+
+      <div class="section-title">Profile & medical</div>
+      <button class="tool-card tool-card--blue" data-nav="profile">
+        <div class="tool-card__icon">${Icon.user}</div>
+        <div class="tool-card__body">
+          <div class="tool-card__title">${State.profile.fullName || 'Your profile'}</div>
+          <div class="tool-card__desc">
+            ${State.profile.bloodType ? `Blood type ${State.profile.bloodType} · ` : ''}Shown to responders when medical info is on.
+          </div>
+        </div>
+        <div class="tool-card__arrow">${Icon.edit}</div>
+      </button>
+
+      <div class="section-title">Alert behaviour</div>
+
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Confirmation countdown</div>
+          <div class="setting-desc">Grace period before the alert fires.</div>
+        </div>
+        <select class="input" id="countdownSelect" style="width:auto; padding:9px 34px 9px 12px;">
+          ${[3, 5, 10, 15].map(n =>
+            `<option value="${n}" ${s.countdownSeconds === n ? 'selected' : ''}>${n}s</option>`
+          ).join('')}
+        </select>
+      </div>
+
+      ${toggle('shareLocation', 'Share location', 'Attach live GPS coordinates to every alert.')}
+      ${toggle('continuousTracking', 'Continuous tracking', 'Keep updating location while an alert is active.')}
+      ${toggle('includeMapsLink', 'Include map link', 'Add a Google Maps URL to the outgoing message.')}
+      ${toggle('includeBattery', 'Include battery level', 'Report phone battery so contacts know your status.')}
+      ${toggle('includeMedical', 'Include medical info', 'Attach blood type, allergies, and medications.')}
+      ${toggle('silentSos', 'Silent SOS', 'Skip the visible countdown — the alert fires quietly.')}
+      ${toggle('autoSirenOnAlert', 'Siren on alert', 'Start the loud siren automatically when an alert fires.')}
+      ${toggle('confirmationChirp', 'Confirmation sounds', 'Play a short chirp on key actions.')}
+
+      <div class="section-title">Automatic triggers</div>
+      ${toggle('shakeToTrigger', 'Shake to trigger SOS', 'Shake your phone to start the countdown.')}
+      ${toggle('fallDetection', 'Fall detection', 'Auto-alert after a sudden impact followed by stillness.')}
+      ${toggle('hotspotMonitor', 'Safety zone monitoring', 'Watch for entry into crime hotspots.')}
+
+      ${s.hotspotMonitor ? `
+        ${toggle('hotspotBeep', 'Beep on zone entry', 'Play a short alert tone when entering a zone.')}
+        ${toggle('hotspotVibrate', 'Vibrate on zone entry', 'Vibrate when entering a zone.')}
+      ` : ''}
+
+      <div class="section-title">Emergency number</div>
+      <div class="setting-row" style="border-bottom:none; padding-top:4px;">
+        <div>
+          <div class="setting-label">Local services</div>
+          <div class="setting-desc">Dialled by the emergency quick action.</div>
+        </div>
+        <input class="input mono" id="emergencyNumberInput" value="${escapeHtml(s.emergencyNumber)}"
+               style="width:100px; text-align:center;" inputmode="tel">
+      </div>
+
+      <div class="section-title">Custom alert message</div>
+      <p class="dim" style="font-size:.74rem; margin:0 0 10px; line-height:1.5;">
+        Leave blank to use the default emergency message.
+      </p>
+      <textarea class="input" id="customMessageInput" placeholder="e.g. I'm in danger, please call me immediately.">${escapeHtml(s.customMessageTemplate)}</textarea>
+      <button class="btn btn--block btn--sm" style="margin-top:8px;" data-action="save-custom-message">Save message</button>
+
+      <div class="section-title">Activity</div>
+      <button class="tool-card" data-nav="log">
+        <div class="tool-card__icon" style="background:var(--info-bg);">${Icon.history}</div>
+        <div class="tool-card__body">
+          <div class="tool-card__title">Activity log</div>
+          <div class="tool-card__desc">${State.log.length} events recorded.</div>
+        </div>
+        <div class="tool-card__arrow">›</div>
+      </button>
+
+      <div class="section-title">About</div>
+      <div class="card">
+        <div class="row row--between"><span class="muted" style="font-size:.84rem;">Version</span><span class="mono" style="font-size:.84rem;">0.3.0</span></div>
+        <div class="row row--between" style="margin-top:10px;"><span class="muted" style="font-size:.84rem;">Storage</span><span class="mono dim" style="font-size:.78rem;">${Registry.get('storage').id}</span></div>
+        <div class="row row--between" style="margin-top:10px;"><span class="muted" style="font-size:.84rem;">Messaging</span><span class="mono dim" style="font-size:.78rem;">${Registry.get('messaging').id}</span></div>
+        <div class="row row--between" style="margin-top:10px;"><span class="muted" style="font-size:.84rem;">Zones</span><span class="mono dim" style="font-size:.78rem;">${Registry.get('safetyZones').id}</span></div>
+      </div>
+
+      <button class="btn btn--danger btn--block" style="margin-top:24px;" data-action="reset-app">Reset all app data</button>
+    </section>
+  `;
+};
+
+/* ---------------- PROFILE ---------------- */
+Views.profile = () => `
+  <section class="screen screen--flush">
+    <div class="section-title">Your profile</div>
+    <p class="dim" style="font-size:.78rem; margin:0 0 16px; line-height:1.55;">
+      Shown to responders when medical info is enabled. Stored only on this device.
+    </p>
+    <form id="profileForm" class="stack">
+      <input class="input" type="text" name="fullName" placeholder="Full name" value="${escapeHtml(State.profile.fullName)}">
+      <input class="input" type="text" name="bloodType" placeholder="Blood type (e.g. O+, A−)" value="${escapeHtml(State.profile.bloodType)}">
+      <input class="input" type="text" name="allergies" placeholder="Allergies (e.g. penicillin)" value="${escapeHtml(State.profile.allergies)}">
+      <input class="input" type="text" name="medications" placeholder="Regular medications" value="${escapeHtml(State.profile.medications)}">
+      <input class="input" type="text" name="conditions" placeholder="Medical conditions" value="${escapeHtml(State.profile.conditions)}">
+      <textarea class="input" name="notes" placeholder="Other notes for responders">${escapeHtml(State.profile.notes)}</textarea>
+      <button class="btn btn--primary btn--block" type="submit">Save profile</button>
+      <button class="btn btn--ghost btn--block" type="button" data-nav="settings">Back to settings</button>
+    </form>
+  </section>
+`;
+
+/* ---------------- LOG ---------------- */
+Views.log = () => `
+  <section class="screen screen--flush">
+    <div class="section-title">Activity log</div>
+    ${State.log.length === 0
+      ? `<div class="empty">Nothing recorded yet.</div>`
+      : `<div class="card" style="padding: 4px 14px;">${State.log.map(Views._logItem).join('')}</div>
+         <button class="btn btn--danger btn--block" style="margin-top:16px;" data-action="clear-log">Clear log</button>`
+    }
+  </section>
+`;
+
+Views._logItem = (entry) => {
+  const meta = LOG_ICONS[entry.type] || LOG_ICONS.system;
+  return `
+    <div class="log-item">
+      <div class="log-icon log-icon--${meta.cls}">${meta.icon}</div>
+      <div class="log-body">
+        <div class="log-title">${escapeHtml(entry.title)}</div>
+        <div class="log-time">${formatRelative(entry.at)}</div>
+      </div>
+    </div>
+  `;
+};
+
+
+/* ================================================================
+   PART 8 — TABS & STATUS STRIP
+   ================================================================ */
+
+const TABS = [
+  { id: 'home',         label: 'Home',     icon: Icon.home },
+  { id: 'tools',        label: 'Tools',    icon: Icon.tools },
+  { id: 'contacts',     label: 'Contacts', icon: Icon.contacts },
+  { id: 'integrations', label: 'Services', icon: Icon.grid },
+  { id: 'settings',     label: 'Settings', icon: Icon.settings },
+];
+
+function renderTabs() {
+  const bar = $('#tabs');
+  const onAlert = State.alert.active;
+  bar.innerHTML = TABS.map(t => {
+    const active = !onAlert && State.route === t.id;
+    return `
+      <button class="tab ${active ? 'is-active' : ''}" data-nav="${t.id}">
+        ${t.icon}
+        <span>${t.label}</span>
+      </button>
+    `;
+  }).join('');
+  bar.style.display = onAlert ? 'none' : '';
+}
+
+function renderStatusStrip() {
+  const strip = $('#statusStrip');
+  if (State.alert.active) {
+    strip.innerHTML = `<span class="mini-pill mini-pill--bad"><span class="dot"></span> Emergency</span>`;
+    return;
+  }
+  const pills = [];
+
+  // GPS
+  pills.push(Registry.get('location').isAvailable()
+    ? `<span class="mini-pill mini-pill--ok"><span class="dot"></span> GPS</span>`
+    : `<span class="mini-pill mini-pill--bad"><span class="dot"></span> No GPS</span>`
+  );
+
+  // Zone monitoring
+  if (State.settings.hotspotMonitor) {
+    const inside = State.zoneMonitor.currentZoneId;
+    pills.push(inside
+      ? `<span class="mini-pill mini-pill--bad"><span class="dot"></span> In zone</span>`
+      : `<span class="mini-pill mini-pill--warn"><span class="dot"></span> Zones</span>`
+    );
+  }
+
+  // Fall detection
+  if (State.settings.fallDetection) {
+    pills.push(`<span class="mini-pill mini-pill--warn"><span class="dot"></span> Fall</span>`);
+  }
+
+  // Battery
+  if (State.battery) {
+    const cls = State.battery.level < 20 && !State.battery.charging ? 'mini-pill--bad' : 'mini-pill--ok';
+    pills.push(`<span class="mini-pill ${cls}"><span class="dot"></span> ${State.battery.level}%${State.battery.charging ? '⚡' : ''}</span>`);
+  }
+
+  // Online
+  pills.push(navigator.onLine
+    ? `<span class="mini-pill mini-pill--ok"><span class="dot"></span> Online</span>`
+    : `<span class="mini-pill mini-pill--warn"><span class="dot"></span> Offline</span>`
+  );
+
+  strip.innerHTML = pills.join('');
+}
+
+
+/* ================================================================
+   PART 9 — ROUTER
+   ================================================================ */
+
+function navigate(route) {
+  State.route = route;
+  render();
+  $('#view').scrollTop = 0;
+}
+
+function render() {
+  const route = State.alert.active ? 'alert' : State.route;
+  const view = $('#view');
+  view.innerHTML = (Views[route] || Views.home)();
+
+  stopElapsedTimer();
+  if (route === 'alert') startElapsedTimer();
+  if (route === 'home')  startSafetyTicker();
+
+  renderTabs();
+  renderStatusStrip();
+  renderActiveToolBar();
+  bind(route);
+}
+
+
+/* ================================================================
+   PART 10 — BINDING
+   ================================================================ */
+
+function bind(route) {
+  $$('[data-nav]').forEach(el =>
+    el.addEventListener('click', () => navigate(el.dataset.nav))
+  );
+
+  $$('[data-action]').forEach(el =>
+    el.addEventListener('click', () => Actions[el.dataset.action]?.(el))
+  );
+
+  // Generic boolean toggles
+  $$('[data-toggle]').forEach(el => {
+    el.addEventListener('click', async () => {
+      const key = el.dataset.toggle;
+      State.settings[key] = !State.settings[key];
+      await persistSettings();
+      el.classList.toggle('is-on', State.settings[key]);
+
+      // Apply side effects per setting
+      if (key === 'shakeToTrigger')  applyShakeSetting();
+      if (key === 'fallDetection')   applyFallSetting();
+      if (key === 'hotspotMonitor')  applyZoneMonitorSetting();
+
+      if (State.alert.active) updateAlertMessage();
+      render();
+    });
+  });
+
+  // Theme segmented control
+  $$('[data-set-theme]').forEach(el => {
+    el.addEventListener('click', () => applyTheme(el.dataset.setTheme));
+  });
+
+  // Hotspot mode segmented control
+  $$('[data-set]').forEach(el => {
+    el.addEventListener('click', async () => {
+      const key = el.dataset.set;
+      State.settings[key] = el.dataset.value;
+      await persistSettings();
+      render();
+    });
+  });
+
+  if (route === 'home')     bindHome();
+  if (route === 'contacts') bindContacts();
+  if (route === 'settings') bindSettings();
+  if (route === 'profile')  bindProfile();
+  if (route === 'zones')    bindZones();
+}
+
+function bindHome() {
+  $('#sosBtn')?.addEventListener('click', Actions['arm-sos']);
+  $$('[data-timer-start]').forEach(el =>
+    el.addEventListener('click', () => Actions['start-safety-timer'](el))
+  );
+  $$('[data-timer-extend]').forEach(el =>
+    el.addEventListener('click', () => Actions['extend-safety-timer'](el))
+  );
+  $('[data-timer-cancel]')?.addEventListener('click', Actions['cancel-safety-timer']);
+}
+
+function bindContacts() {
+  $('#addContactForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const name = String(fd.get('name') || '').trim();
+    const phone = String(fd.get('phone') || '').trim();
+    const primary = fd.get('primary') === 'on';
+    if (!name || !phone) return;
+    if (primary) State.contacts.forEach(c => c.primary = false);
+    State.contacts.push({ id: nextId(), name, phone, primary });
+    persistContacts();
+    logEvent('system', `Contact added — ${name}`);
+    toast(`${name} added`);
+    render();
+  });
+}
+
+function bindSettings() {
+  $('#countdownSelect')?.addEventListener('change', async (e) => {
+    State.settings.countdownSeconds = Number(e.target.value);
+    await persistSettings();
+    toast(`Countdown set to ${e.target.value}s`);
+  });
+
+  $('#emergencyNumberInput')?.addEventListener('change', async (e) => {
+    State.settings.emergencyNumber = e.target.value.trim() || '112';
+    await persistSettings();
+    toast('Emergency number updated');
+  });
+}
+
+function bindProfile() {
+  $('#profileForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    State.profile = {
+      fullName:    String(fd.get('fullName') || '').trim(),
+      bloodType:   String(fd.get('bloodType') || '').trim(),
+      allergies:   String(fd.get('allergies') || '').trim(),
+      medications: String(fd.get('medications') || '').trim(),
+      conditions:  String(fd.get('conditions') || '').trim(),
+      notes:       String(fd.get('notes') || '').trim(),
+    };
+    await Registry.get('storage').set('profile', State.profile);
+    toast('Profile saved');
+    logEvent('system', 'Profile updated');
+  });
+}
+
+function bindZones() {
+  $('#hotspotCooldown')?.addEventListener('change', async (e) => {
+    State.settings.hotspotCooldownMin = Number(e.target.value);
+    await persistSettings();
+    toast(`Cooldown set to ${e.target.value} min`);
+  });
+}
+
+
+/* ================================================================
+   PART 11 — ACTIONS
+   ================================================================ */
+
+const Actions = {
+  /* ---------- SOS ---------- */
+  'arm-sos'() {
+    if (State.alert.active || State.countdown.running) return;
+
+    Registry.get('location').getCurrent()
+      .then(loc => { State.alert.location = loc; })
+      .catch(() => {});
+
+    // Silent mode: no visible countdown, fires after timer elapses
+    if (State.settings.silentSos) {
+      State.countdown.running = true;
+      Registry.get('haptics').buzz([30, 40, 30]);
+      toast('Silent SOS armed');
+      setTimeout(() => {
+        State.countdown.running = false;
+        if (!State.alert.active) beginAlert({ reason: 'manual' });
+      }, State.settings.countdownSeconds * 1000);
+      return;
+    }
+
+    State.countdown.running = true;
+    showCountdown(State.settings.countdownSeconds);
+  },
+
+  'cancel-countdown'() {
+    clearInterval(State.countdown.timer);
+    State.countdown.timer = null;
+    State.countdown.running = false;
+    hideCountdown();
+    toast('Cancelled');
+  },
+
+  /* ---------- Emergency ---------- */
+  async 'emergency-call'() {
+    const number = State.settings.emergencyNumber;
+    logEvent('call', `Called emergency services (${number})`);
+    await Registry.get('messaging').call(number);
+  },
+
+  async 'share-location'() {
+    try {
+      const loc = await Registry.get('location').getCurrent();
+      State.alert.location = loc;
+      const text = `My current location: ${Registry.get('maps').linkFor(loc.lat, loc.lng)}`;
+      const res = await Registry.get('share').send({ title: 'My location', text });
+      logEvent('share', 'Shared current location');
+      toast(res.status === 'copied' ? 'Location copied' : 'Shared');
+    } catch { toast('Could not get location'); }
+  },
+
+  'toggle-alert-siren'() {
+    State.alert.sirenOn = !State.alert.sirenOn;
+    if (State.alert.sirenOn) {
+      Registry.get('audio').startSiren();
+      Registry.get('haptics').sosPattern();
+      logEvent('siren', 'Alert siren started');
+    } else {
+      Registry.get('audio').stopSiren();
+      logEvent('siren', 'Alert siren stopped');
+    }
+    render();
+  },
+
+  async 'refresh-location'() {
+    try {
+      State.alert.location = await Registry.get('location').getCurrent();
+      updateAlertLocation();
+      toast('Location updated');
+    } catch { toast('Location unavailable'); }
+  },
+
+  async 'copy-message'() {
+    try {
+      await navigator.clipboard.writeText(buildAlertMessage());
+      toast('Message copied');
+    } catch { toast('Copy failed'); }
+  },
+
+  /* ---------- Contacts ---------- */
+  async 'text-contact'(el) {
+    const c = State.contacts.find(c => c.id === el.dataset.id);
+    if (!c) return;
+    await Registry.get('messaging').send(c.phone, buildAlertMessage());
+    markNotified(c.id);
+    logEvent('share', `Texted ${c.name}`);
+    toast(`Opening messages for ${c.name}`);
+  },
+
+  async 'call-contact'(el) {
+    const c = State.contacts.find(c => c.id === el.dataset.id);
+    if (!c) return;
+    await Registry.get('messaging').call(c.phone);
+    markNotified(c.id);
+    logEvent('call', `Called ${c.name}`);
+  },
+
+  async 'text-all'() {
+    if (State.contacts.length === 0) return toast('No contacts to message');
+    await Registry.get('messaging').send(
+      State.contacts.map(c => c.phone).join(','),
+      buildAlertMessage()
+    );
+    logEvent('share', `Texted all ${State.contacts.length} contacts`);
+    toast('Opening group message');
+  },
+
+  async 'share-alert'() {
+    try {
+      const res = await Registry.get('share').send({
+        title: 'Emergency SOS',
+        text: buildAlertMessage(),
+      });
+      logEvent('share', 'Shared alert message');
+      toast(res.status === 'copied' ? 'Message copied' : 'Shared');
+    } catch {}
+  },
+
+  'make-primary'(el) {
+    const id = el.dataset.id;
+    const was = State.contacts.find(c => c.id === id)?.primary;
+    State.contacts.forEach(c => c.primary = false);
+    if (!was) {
+      const t = State.contacts.find(c => c.id === id);
+      if (t) t.primary = true;
+    }
+    persistContacts();
+    render();
+  },
+
+  'delete-contact'(el) {
+    const id = el.dataset.id;
+    const c = State.contacts.find(c => c.id === id);
+    if (!c) return;
+    if (!confirm(`Remove ${c.name}?`)) return;
+    State.contacts = State.contacts.filter(c => c.id !== id);
+    persistContacts();
+    logEvent('system', `Contact removed — ${c.name}`);
+    toast(`${c.name} removed`);
+    render();
+  },
+
+  /* ---------- Tools ---------- */
+  'toggle-siren'() {
+    State.tools.sirenOn = !State.tools.sirenOn;
+    if (State.tools.sirenOn) {
+      Registry.get('audio').startSiren();
+      Registry.get('haptics').sosPattern();
+      logEvent('siren', 'Siren started');
+    } else {
+      Registry.get('audio').stopSiren();
+      logEvent('siren', 'Siren stopped');
+    }
+    render();
+  },
+
+  'toggle-strobe'() {
+    State.tools.strobeOn = !State.tools.strobeOn;
+    if (State.tools.strobeOn) {
+      let on = false;
+      State.tools.strobeTimer = setInterval(() => {
+        on = !on;
+        document.body.classList.toggle('strobe-on', on);
+      }, 260);
+      logEvent('siren', 'Strobe started');
+    } else {
+      clearInterval(State.tools.strobeTimer);
+      State.tools.strobeTimer = null;
+      document.body.classList.remove('strobe-on');
+      logEvent('siren', 'Strobe stopped');
+    }
+    render();
+  },
+
+  'open-fake-call'() {
+    if (State.tools.fakeCallOpen) return;
+    State.tools.fakeCallOpen = true;
+    openFakeCall();
+  },
+
+  async 'search-nearby'(el) {
+    const places = Registry.get('places');
+    if (places.status !== 'connected') return toast('Places adapter not connected');
+    try {
+      const loc = await Registry.get('location').getCurrent();
+      const results = await places.nearby(loc.lat, loc.lng, el.dataset.type);
+      toast(`${results.length} results`);
+    } catch { toast('Search failed'); }
+  },
+
+  /* ---------- Zones ---------- */
+  async 'add-zone-at-current'() {
+    try {
+      const loc = await Registry.get('location').getCurrent();
+      const name = prompt('Zone name (e.g. "City Centre — high crime"):',
+        'New zone');
+      if (!name) return;
+      const level = (prompt('Severity — "high", "medium", or "low":', 'medium') || 'medium').toLowerCase();
+      const safeLevel = ['high','medium','low'].includes(level) ? level : 'medium';
+      const radiusStr = prompt('Radius in metres:', '800');
+      const radius = Math.max(100, Number(radiusStr) || 800);
+
+      await Registry.get('safetyZones').add({
+        id: nextId('z'),
+        name: name.trim(),
+        level: safeLevel,
+        lat: loc.lat,
+        lng: loc.lng,
+        radius,
+      });
+      logEvent('zone', `Zone added — ${name}`);
+      toast(`Zone added`);
+      render();
+    } catch { toast('Could not add zone'); }
+  },
+
+  async 'delete-zone'(el) {
+    const id = el.dataset.id;
+    const zone = Registry.get('safetyZones').all().find(z => z.id === id);
+    if (!zone) return;
+    if (!confirm(`Delete "${zone.name}"?`)) return;
+    await Registry.get('safetyZones').remove(id);
+    if (State.zoneMonitor.currentZoneId === id) State.zoneMonitor.currentZoneId = null;
+    logEvent('zone', `Zone removed — ${zone.name}`);
+    toast('Zone removed');
+    render();
+  },
+
+  async 'load-sample-zones'() {
+    await Registry.get('safetyZones').replace(Registry.get('safetyZones').sampleZones());
+    logEvent('zone', 'Sample zones loaded');
+    toast('Sample zones loaded');
+    render();
+  },
+
+  /** Test helper — pretends we just entered the nearest zone. */
+  async 'simulate-zone-entry'() {
+    const zones = Registry.get('safetyZones').all();
+    if (zones.length === 0) return toast('No zones to simulate');
+
+    let nearest = zones[0];
+    try {
+      const loc = await Registry.get('location').getCurrent();
+      const locApi = Registry.get('location');
+      nearest = zones.reduce((best, z) => {
+        const d = locApi.distance(loc, z);
+        return (!best || d < best._d) ? Object.assign({ _d: d }, z) : best;
+      }, null);
+    } catch {}
+
+    await onEnterZone(nearest, { simulated: true });
+  },
+
+  /* ---------- Safety timer ---------- */
+  'start-safety-timer'(el) {
+    const minutes = Number(el.dataset.timerStart);
+    const durationMs = minutes * 60_000;
+    State.safetyTimer = {
+      active: true,
+      endsAt: Date.now() + durationMs,
+      durationMs,
+      timer: setTimeout(() => {
+        logEvent('timer', 'Safety timer expired — alerting');
+        beginAlert({ reason: 'safety-timer' });
+      }, durationMs),
+      ticker: null,
+    };
+    logEvent('timer', `Safety timer started — ${minutes} min`);
+    toast(`Check-in in ${minutes} min`);
+    render();
+  },
+
+  'extend-safety-timer'(el) {
+    const minutes = Number(el.dataset.timerExtend);
+    if (!State.safetyTimer.active) return;
+    clearTimeout(State.safetyTimer.timer);
+    State.safetyTimer.endsAt += minutes * 60_000;
+    State.safetyTimer.durationMs += minutes * 60_000;
+    State.safetyTimer.timer = setTimeout(() => {
+      logEvent('timer', 'Safety timer expired — alerting');
+      beginAlert({ reason: 'safety-timer' });
+    }, State.safetyTimer.endsAt - Date.now());
+    logEvent('timer', `Safety timer extended — +${minutes} min`);
+    toast(`Extended by ${minutes} min`);
+    render();
+  },
+
+  'cancel-safety-timer'() {
+    if (!State.safetyTimer.active) return;
+    clearTimeout(State.safetyTimer.timer);
+    clearInterval(State.safetyTimer.ticker);
+    State.safetyTimer = { active: false, endsAt: null, durationMs: 0, timer: null, ticker: null };
+    logEvent('timer', 'Checked in — timer cancelled');
+    toast('Checked in');
+    render();
+  },
+
+  /* ---------- Settings ---------- */
+  async 'save-custom-message'() {
+    const el = $('#customMessageInput');
+    if (!el) return;
+    State.settings.customMessageTemplate = el.value.trim();
+    await persistSettings();
+    toast('Message saved');
+  },
+
+  /* ---------- Resolve ---------- */
+  'resolve-alert'() {
+    endAlert();
+    toast('Alert cancelled — stay safe');
+  },
+
+  'clear-log'() {
+    if (!confirm('Clear the entire activity log?')) return;
+    State.log = [];
+    Registry.get('storage').set('log', []);
+    toast('Log cleared');
+    render();
+  },
+
+  async 'reset-app'() {
+    if (!confirm('Delete all contacts, profile, zones, log, and settings?')) return;
+    ['contacts', 'settings', 'profile', 'log', 'zones'].forEach(k => Registry.get('storage').remove(k));
+    State.contacts = [];
+    State.settings = { ...DEFAULT_SETTINGS, theme: State.theme };
+    State.profile = { ...DEFAULT_PROFILE };
+    State.log = [];
+    await Registry.get('safetyZones').replace([]);
+    stopZoneMonitor();
+    Registry.get('motion').unsubscribeAll();
+    navigate('home');
+    toast('App reset');
+  },
+};
+
+
+/* ================================================================
+   PART 12 — COUNTDOWN
+   ================================================================ */
+
+function showCountdown(seconds) {
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.id = 'countdownOverlay';
+  overlay.innerHTML = `
+    <div class="countdown">
+      <div class="countdown__ring">
+        <svg width="190" height="190" viewBox="0 0 190 190">
+          <circle class="countdown__track" cx="95" cy="95" r="54"></circle>
+          <circle class="countdown__progress" cx="95" cy="95" r="54" style="--dur:${seconds}s"></circle>
+        </svg>
+        <div class="countdown__num" id="countdownNum">${seconds}</div>
+      </div>
+      <div class="countdown__label">Sending alert</div>
+      <button class="btn btn--block" style="min-width:220px;" id="cancelCountdown">Cancel</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  $('#cancelCountdown', overlay).addEventListener('click', Actions['cancel-countdown']);
+
+  Registry.get('haptics').buzz([80, 60, 80]);
+
+  let remaining = seconds;
+  const numEl = $('#countdownNum', overlay);
+  State.countdown.timer = setInterval(() => {
+    remaining -= 1;
+    if (numEl) numEl.textContent = Math.max(0, remaining);
+    if (remaining <= 0) {
+      clearInterval(State.countdown.timer);
+      State.countdown.timer = null;
+      State.countdown.running = false;
+      hideCountdown();
+      beginAlert({ reason: 'manual' });
+    }
+  }, 1000);
+}
+
+function hideCountdown() { $('#countdownOverlay')?.remove(); }
+
+
+/* ================================================================
+   PART 13 — ALERT LIFECYCLE
+   ================================================================ */
+
+async function beginAlert({ reason = 'manual' } = {}) {
+  State.alert.active = true;
+  State.alert.startedAt = Date.now();
+  State.alert.notified = [];
+  State.alert.sirenOn = false;
+  State.alert.reason = reason;
+
+  if (State.safetyTimer.active) {
+    clearTimeout(State.safetyTimer.timer);
+    clearInterval(State.safetyTimer.ticker);
+    State.safetyTimer = { active: false, endsAt: null, durationMs: 0, timer: null, ticker: null };
+  }
+
+  logEvent('alert',
+    reason === 'safety-timer' ? 'Safety timer expired — alert triggered'
+    : reason === 'hotspot'    ? 'Crime hotspot entered — alert triggered'
+    : reason === 'fall'       ? 'Fall detected — alert triggered'
+    : 'SOS alert triggered'
+  );
+
+  Registry.get('haptics').sosPattern();
+  if (State.settings.confirmationChirp) Registry.get('audio').chirp();
+
+  navigate('alert');
+  toast('Alert active');
+
+  try {
+    State.alert.location = await Registry.get('location').getCurrent();
+    updateAlertLocation();
+  } catch {}
+
+  if (State.settings.continuousTracking) {
+    State.alert.watchId = Registry.get('location').watch(
+      loc => { State.alert.location = loc; updateAlertLocation(); },
+      () => {}
+    );
+  }
+
+  if (State.settings.autoSirenOnAlert) {
+    State.alert.sirenOn = true;
+    Registry.get('audio').startSiren();
+  }
+
+  Registry.get('backend').pushAlert?.({
+    startedAt: State.alert.startedAt,
+    reason,
+    location: State.alert.location,
+    contacts: State.contacts,
+    profile: State.settings.includeMedical ? State.profile : null,
+  }).catch(() => {});
+}
+
+function endAlert() {
+  const duration = State.alert.startedAt ? Date.now() - State.alert.startedAt : 0;
+
+  Registry.get('location').clearWatch(State.alert.watchId);
+  if (State.alert.sirenOn) Registry.get('audio').stopSiren();
+
+  logEvent('resolve', `Alert cancelled after ${formatDuration(duration)}`);
+
+  State.alert = {
+    active: false, startedAt: null, location: null,
+    watchId: null, notified: [], sirenOn: false, reason: 'manual',
+  };
+  stopElapsedTimer();
+  navigate('home');
+}
+
+function markNotified(id) {
+  if (!State.alert.notified.includes(id)) State.alert.notified.push(id);
+}
+
+function updateAlertLocation() {
+  const loc = State.alert.location;
+  if (!loc) return;
+  const coords = $('#locCoords');
+  const meta = $('#locMeta');
+  const chip = $('#locChip');
+  const mapLink = $('#mapLink');
+
+  if (coords) coords.textContent = `${loc.lat.toFixed(6)}, ${loc.lng.toFixed(6)}`;
+  if (meta) meta.textContent = `±${Math.round(loc.accuracy)}m accuracy · ${new Date(loc.at).toLocaleTimeString()}`;
+  if (chip) { chip.textContent = 'Locked'; chip.className = 'status-chip status-chip--on'; }
+  if (mapLink) {
+    mapLink.href = Registry.get('maps').linkFor(loc.lat, loc.lng);
+    mapLink.removeAttribute('disabled');
+  }
+  updateAlertMessage();
+}
+
+function updateAlertMessage() {
+  const el = $('#msgPreview');
+  if (el) el.textContent = buildAlertMessage();
+}
+
+function startElapsedTimer() {
+  const tick = () => {
+    const el = $('#elapsedDisplay');
+    if (!el || !State.alert.startedAt) return;
+    el.textContent = formatDuration(Date.now() - State.alert.startedAt);
+  };
+  tick();
+  State.elapsedTimer = setInterval(tick, 1000);
+}
+
+function stopElapsedTimer() {
+  if (State.elapsedTimer) {
+    clearInterval(State.elapsedTimer);
+    State.elapsedTimer = null;
+  }
+}
+
+
+/* ================================================================
+   PART 14 — SAFETY TIMER TICKER
+   ================================================================ */
+
+function startSafetyTicker() {
+  if (State.safetyTimer.ticker) clearInterval(State.safetyTimer.ticker);
+  if (!State.safetyTimer.active) return;
+  State.safetyTimer.ticker = setInterval(() => {
+    const el = $('#safetyTimerDisplay');
+    if (!el) return;
+    const remaining = Math.max(0, State.safetyTimer.endsAt - Date.now());
+    el.textContent = formatDuration(remaining);
+    if (remaining <= 0) clearInterval(State.safetyTimer.ticker);
+  }, 1000);
+}
+
+
+/* ================================================================
+   PART 15 — FAKE CALL
+   ================================================================ */
+
+function openFakeCall() {
+  const caller = 'Mom';
+  const overlay = document.createElement('div');
+  overlay.className = 'fake-call';
+  overlay.id = 'fakeCall';
+  overlay.innerHTML = `
+    <div style="text-align:center; width:100%;">
+      <div class="fake-call__label">Incoming call</div>
+      <div class="fake-call__caller">
+        <div class="fake-call__avatar">${escapeHtml(initials(caller))}</div>
+        <div class="fake-call__name">${escapeHtml(caller)}</div>
+        <div class="fake-call__status">mobile</div>
+      </div>
+    </div>
+    <div class="fake-call__actions">
+      <div>
+        <button class="call-btn call-btn--decline" id="fakeDecline">${Icon.phoneDown}</button>
+        <div class="call-btn__label">Decline</div>
+      </div>
+      <div>
+        <button class="call-btn call-btn--accept" id="fakeAccept">${Icon.phone}</button>
+        <div class="call-btn__label">Accept</div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  Registry.get('audio').startRingtone();
+  Registry.get('haptics').buzz([200, 100, 200, 100, 200]);
+
+  $('#fakeDecline', overlay).addEventListener('click', closeFakeCall);
+  $('#fakeAccept', overlay).addEventListener('click', () => {
+    Registry.get('audio').stopRingtone();
+    toast('Call accepted');
+    closeFakeCall();
+  });
+}
+
+function closeFakeCall() {
+  Registry.get('audio').stopRingtone();
+  $('#fakeCall')?.remove();
+  State.tools.fakeCallOpen = false;
+  render();
+}
+
+
+/* ================================================================
+   PART 16 — ACTIVE TOOL BAR
+   ================================================================ */
+
+function renderActiveToolBar() {
+  const existing = $('#activeToolBar');
+  const show = State.tools.sirenOn || State.tools.strobeOn;
+  if (!show) { existing?.remove(); return; }
+  if (existing) return;
+
+  const bar = document.createElement('div');
+  bar.className = 'active-tool-bar';
+  bar.id = 'activeToolBar';
+
+  const tools = [];
+  if (State.tools.sirenOn) tools.push('Siren');
+  if (State.tools.strobeOn) tools.push('Strobe');
+
+  bar.innerHTML = `
+    <div class="active-tool-bar__body">
+      <div class="active-tool-bar__title">${tools.join(' · ')} active</div>
+      <div class="active-tool-bar__desc">Tap stop to silence everything.</div>
+    </div>
+    <button class="btn btn--primary btn--sm" id="stopAllTools">Stop</button>
+  `;
+  document.body.appendChild(bar);
+  $('#stopAllTools').addEventListener('click', () => {
+    if (State.tools.sirenOn) Actions['toggle-siren']();
+    if (State.tools.strobeOn) Actions['toggle-strobe']();
+  });
+}
+
+
+/* ================================================================
+   PART 17 — SHAKE-TO-TRIGGER
+   ================================================================ */
+
+let shakeUnsub = null;
+
+async function applyShakeSetting() {
+  const motion = Registry.get('motion');
+
+  if (shakeUnsub) { shakeUnsub(); shakeUnsub = null; }
+  if (!State.settings.shakeToTrigger) return;
+
+  if (!motion.isSupported()) {
+    toast('Motion sensors not supported');
+    State.settings.shakeToTrigger = false;
+    await persistSettings();
+    return;
+  }
+
+  if (motion.needsPermission()) {
+    const result = await motion.requestPermission();
+    if (result !== 'granted') {
+      toast('Motion permission denied');
+      State.settings.shakeToTrigger = false;
+      await persistSettings();
+      render();
+      return;
+    }
+  }
+
+  let lastShake = 0;
+  const samples = [];
+  const THRESHOLD = 18;
+  const COOLDOWN = 1500;
+
+  shakeUnsub = motion.subscribe(({ magnitude }) => {
+    samples.push(magnitude);
+    if (samples.length > 5) samples.shift();
+    const avg = samples.reduce((a, b) => a + b, 0) / samples.length;
+    const now = Date.now();
+    if (avg > THRESHOLD && now - lastShake > COOLDOWN) {
+      lastShake = now;
+      if (State.alert.active || State.countdown.running) return;
+      Registry.get('haptics').buzz([60, 40, 60]);
+      toast('Shake detected — arming SOS');
+      Actions['arm-sos']();
+    }
+  });
+}
+
+
+/* ================================================================
+   PART 18 — FALL DETECTION
+   ================================================================ */
+
+async function applyFallSetting() {
+  const fall = Registry.get('fallDetection');
+  const motion = Registry.get('motion');
+
+  if (!State.settings.fallDetection) {
+    fall.stop();
+    return;
+  }
+
+  if (!motion.isSupported()) {
+    toast('Motion sensors not supported');
+    State.settings.fallDetection = false;
+    await persistSettings();
+    render();
+    return;
+  }
+
+  if (motion.needsPermission()) {
+    const result = await motion.requestPermission();
+    if (result !== 'granted') {
+      toast('Motion permission denied');
+      State.settings.fallDetection = false;
+      await persistSettings();
+      render();
+      return;
+    }
+  }
+
+  const started = fall.start(({ impactAt, detectedAt }) => {
+    if (State.alert.active || State.countdown.running) return;
+    if (Date.now() - State.fallMonitor.lastTriggeredAt < 60_000) return;
+    State.fallMonitor.lastTriggeredAt = Date.now();
+
+    Registry.get('haptics').sosPattern();
+    if (State.settings.confirmationChirp) Registry.get('audio').chirp(660, 0.35);
+
+    logEvent('fall', 'Possible fall detected — arming countdown');
+    toast('Possible fall detected');
+
+    // Give the user a longer window to cancel — 15 seconds
+    const originalCountdown = State.settings.countdownSeconds;
+    State.settings.countdownSeconds = 15;
+    showCountdown(15);
+
+    // Restore the setting after the countdown ends (cancel or fire)
+    const restore = () => {
+      State.settings.countdownSeconds = originalCountdown;
+    };
+    const originalBegin = beginAlert;
+    // Restore on next tick after countdown resolution — simplest reliable approach
+    setTimeout(restore, 16_500);
+
+    // Fall reason override: monkey-patch the next beginAlert call's reason
+    window.__sos_nextAlertReason = 'fall';
+  });
+
+  if (!started) toast('Fall detection could not start');
+}
+
+
+/* ================================================================
+   PART 19 — SAFETY ZONE MONITOR
+   ================================================================ */
+
+async function applyZoneMonitorSetting() {
+  if (State.settings.hotspotMonitor) startZoneMonitor();
+  else stopZoneMonitor();
+}
+
+function startZoneMonitor() {
+  if (State.zoneMonitor.watchId != null) return;
+
+  const loc = Registry.get('location');
+  if (!loc.isAvailable()) {
+    toast('GPS unavailable — zone monitoring disabled');
+    State.settings.hotspotMonitor = false;
+    persistSettings();
+    return;
+  }
+
+  State.zoneMonitor.watchId = loc.watch(async (position) => {
+    State.zoneMonitor.lastLocation = position;
+
+    const zone = Registry.get('safetyZones').zoneAt(position.lat, position.lng);
+    const newZoneId = zone ? zone.id : null;
+
+    if (newZoneId === State.zoneMonitor.currentZoneId) return;
+
+    const wasInside = State.zoneMonitor.currentZoneId;
+    State.zoneMonitor.currentZoneId = newZoneId;
+
+    // Update home view indicator if we're on home
+    if (State.route === 'home' || State.route === 'zones') render();
+    renderStatusStrip();
+
+    // Leaving a zone
+    if (wasInside && !newZoneId) {
+      // Silent exit for now
+      return;
+    }
+
+    // Entering a new zone
+    if (newZoneId && zone) {
+      await onEnterZone(zone);
+    }
+  }, () => {});
+}
+
+function stopZoneMonitor() {
+  const id = State.zoneMonitor.watchId;
+  if (id != null) Registry.get('location').clearWatch(id);
+  State.zoneMonitor.watchId = null;
+  State.zoneMonitor.currentZoneId = null;
+}
+
+async function onEnterZone(zone, { simulated = false } = {}) {
+  const s = State.settings;
+
+  if (s.hotspotVibrate) Registry.get('haptics').zoneEnterPattern();
+  if (s.hotspotBeep)     Registry.get('audio').chirp(520, 0.28);
+
+  logEvent('zone', `Entered zone — ${zone.name} (${zone.level})`);
+
+  if (simulated) {
+    toast(`Simulated entry: ${zone.name}`, 2600);
+  } else {
+    toast(`⚠️ Entering ${zone.name}`, 3000);
+  }
+
+  if (s.hotspotMode !== 'arm') return;
+  if (State.alert.active || State.countdown.running) return;
+
+  // Cooldown check per zone
+  const lastArmed = State.zoneMonitor.recentArmedAt[zone.id] || 0;
+  const cooldownMs = (s.hotspotCooldownMin || 30) * 60_000;
+  if (Date.now() - lastArmed < cooldownMs) {
+    toast(`Skipping auto-arm — recent entry`, 1800);
+    return;
+  }
+  State.zoneMonitor.recentArmedAt[zone.id] = Date.now();
+
+  // Small delay so the user sees the zone toast first
+  setTimeout(() => {
+    if (State.alert.active || State.countdown.running) return;
+    toast('Hotspot entered — starting countdown');
+    State.countdown.running = true;
+    showCountdown(s.countdownSeconds);
+    window.__sos_nextAlertReason = 'hotspot';
+  }, 900);
+}
+
+
+/* ================================================================
+   PART 20 — PWA MANIFEST
+   ================================================================ */
+
+function installManifest() {
+  const manifest = {
+    name: 'SOS — Emergency Assistant',
+    short_name: 'SOS',
+    description: 'Fast emergency alerts with live location sharing.',
+    start_url: '.',
+    display: 'standalone',
+    orientation: 'portrait',
+    background_color: '#0b0d12',
+    theme_color: '#0b0d12',
+    icons: [{
+      src: 'data:image/svg+xml;utf8,' + encodeURIComponent(
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="112" fill="#0b0d12"/>
+          <circle cx="256" cy="256" r="150" fill="#e11d48"/>
+          <text x="256" y="300" font-family="system-ui,sans-serif" font-size="120"
+                font-weight="900" fill="#fff" text-anchor="middle">SOS</text>
+        </svg>`
+      ),
+      sizes: '512x512',
+      type: 'image/svg+xml',
+      purpose: 'any maskable',
+    }],
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  let link = document.querySelector('link[rel="manifest"]');
+  if (!link) {
+    link = document.createElement('link');
+    link.rel = 'manifest';
+    document.head.appendChild(link);
+  }
+  link.href = url;
+}
+
+
+/* ================================================================
+   PART 21 — PERSISTENCE
+   ================================================================ */
+
+async function persistContacts() {
+  await Registry.get('storage').set('contacts', State.contacts);
+  Registry.get('backend').syncContacts?.(State.contacts).catch(() => {});
+}
+
+async function persistSettings() {
+  await Registry.get('storage').set('settings', State.settings);
+}
+
+
+/* ================================================================
+   PART 22 — INIT
+   ================================================================ */
+
+async function init() {
+  const storage = Registry.get('storage');
+
+  State.contacts = (await storage.get('contacts', [])) || [];
+  State.profile = { ...DEFAULT_PROFILE, ...(await storage.get('profile', {})) };
+  State.log = (await storage.get('log', [])) || [];
+
+  const savedSettings = await storage.get('settings', null);
+  if (savedSettings) State.settings = { ...DEFAULT_SETTINGS, ...savedSettings };
+
+  // Load theme
+  const savedTheme = (await storage.get('theme', 'auto')) || 'auto';
+  State.theme = savedTheme;
+  State.settings.theme = savedTheme;
+
+  // Load zones
+  await Registry.get('safetyZones').load();
+
+  installManifest();
+  render();
+
+  // Prime GPS readout
+  Registry.get('location').getCurrent()
+    .then(loc => {
+      const el = $('#gpsReadout');
+      if (el) el.textContent = `${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}`;
+    })
+    .catch(() => {});
+
+  // Battery
+  Registry.get('battery').watch(b => {
+    State.battery = b;
+    renderStatusStrip();
+    if (State.alert.active) updateAlertMessage();
+  });
+
+  // Online status
+  window.addEventListener('online',  renderStatusStrip);
+  window.addEventListener('offline', renderStatusStrip);
+
+  // Automatic triggers
+  if (State.settings.shakeToTrigger) applyShakeSetting();
+  if (State.settings.fallDetection)  applyFallSetting();
+  if (State.settings.hotspotMonitor) startZoneMonitor();
+
+  logEvent('system', 'App started');
+
+  // Warn before closing mid-alert
+  window.addEventListener('beforeunload', (e) => {
+    if (State.alert.active) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  // Silence non-critical audio when the app goes to the background
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && !State.alert.active && !State.tools.sirenOn) {
+      Registry.get('audio').stopAll();
+    }
+  });
+}
+
+init();
+</script>
+</body>
+</html>
